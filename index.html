@@ -46,38 +46,17 @@
     <!-- ================================================================= -->
     <!-- PRE-APPLICATION ANIMATED INTRO (LUMINA CAD 3D PIXEL FORMATION)     -->
     <!-- ================================================================= -->
-    <div id="lumina-intro" class="fixed inset-0 flex flex-col justify-between items-center pointer-events-auto select-none overflow-hidden" style="z-index: 9999;" role="dialog" aria-modal="true" aria-label="LuminaCAD Introduction">
+    <div id="lumina-intro" class="fixed inset-0 flex flex-col justify-end items-center pointer-events-auto select-none overflow-hidden" style="z-index: 9999;" role="dialog" aria-modal="true" aria-label="LuminaCAD Introduction">
         <!-- Blueprint subtle grid floor texture -->
         <div class="absolute inset-0 intro-blueprint-grid pointer-events-none opacity-40"></div>
 
         <!-- Dedicated Three.js WebGL canvas for procedural 3D lamp & particle formation -->
         <canvas id="intro-canvas" class="absolute inset-0 w-full h-full block z-0 outline-none"></canvas>
 
-        <!-- Top Status Bar & Tech Specs -->
-        <div class="relative z-10 w-full pt-6 px-6 sm:px-10 flex justify-between items-center opacity-0 transition-opacity duration-1000 delay-300" id="intro-topbar">
-            <div class="flex items-center gap-2.5 text-xs font-mono tracking-wider text-slate-400 bg-cad-panel/75 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-lg">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]"></span>
-                <span class="text-slate-200 font-semibold tracking-wide">LUMINA ARCHITECT</span>
-                <span class="text-slate-500">//</span>
-                <span class="text-amber-400/90 hidden sm:inline">1:1 WATERTIGHT MESH</span>
-            </div>
-            <div class="flex items-center gap-2.5">
-                <div class="text-[11px] font-mono text-slate-400 bg-cad-panel/75 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-lg hidden sm:flex items-center gap-2">
-                    <i class="ph-bold ph-cube text-amber-400"></i>
-                    <span>PARAMETRIC LIGHTING ENGINE</span>
-                </div>
-                <!-- Intro Music Audio Toggle Button -->
-                <button id="btn-intro-audio" onclick="toggleIntroAudio()" class="flex items-center gap-2 text-xs font-mono text-amber-300 bg-cad-panel/85 hover:bg-cad-panel border border-amber-500/40 hover:border-amber-400 px-3.5 py-1.5 rounded-full shadow-lg shadow-amber-500/10 transition-all cursor-pointer" title="Toggle Intro Music">
-                    <i id="intro-audio-icon" class="ph-fill ph-speaker-high text-amber-400 text-sm animate-pulse"></i>
-                    <span id="intro-audio-label">Music: ON</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Center Bottom: Animated LuminaCAD Title, Pixel Reveal, and Realistic Bulb Enter Studio with Color Ring -->
-        <div class="relative z-10 flex flex-col items-center justify-end pb-4 sm:pb-6 text-center max-w-xl px-4 pointer-events-auto">
+        <!-- Center Bottom: Animated LuminaCAD Title, Subtitle, and Lamp Enter Studio Button -->
+        <div class="relative z-10 flex flex-col items-center justify-end pb-6 sm:pb-8 text-center max-w-xl px-4 pointer-events-auto">
             <!-- Application Title with Letter-by-Letter Appearance & Color Transitions -->
-            <div id="intro-brand" class="mb-2 text-center">
+            <div id="intro-brand" class="mb-4 text-center">
                 <h1 id="intro-title" class="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-tight flex items-center justify-center select-none lumina-title-glow">
                     <span class="intro-letter" style="--i:0">L</span>
                     <span class="intro-letter" style="--i:1">u</span>
@@ -92,12 +71,6 @@
                 <p id="intro-subtitle" class="mt-1 text-[11px] sm:text-xs font-mono tracking-[0.22em] text-slate-400 uppercase opacity-0 transition-all duration-1000 delay-500">
                     Parametric 3D Printable Lamp Studio
                 </p>
-            </div>
-
-            <!-- Dynamic Formation Status Pill -->
-            <div id="intro-status" class="mb-3 flex items-center gap-2 px-3 py-1 rounded-full bg-cad-panel/85 border border-amber-500/35 text-[10px] font-mono text-amber-300 shadow-xl shadow-black/50 backdrop-blur-md opacity-0 transition-opacity duration-700 delay-300">
-                <i class="ph-fill ph-sparkle text-amber-400 animate-spin text-xs" style="animation-duration: 4s;"></i>
-                <span id="intro-status-text">Synthesizing Parametric Geometry...</span>
             </div>
 
             <!-- Small Lamp-Shaped Enter Button with Multicolor Illumination -->

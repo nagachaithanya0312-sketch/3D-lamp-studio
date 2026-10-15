@@ -2533,23 +2533,10 @@ function initLuminaIntro() {
         }
 
         // 5. UI Elements Reveal Progression
-        const topBar = document.getElementById('intro-topbar');
         const subtitle = document.getElementById('intro-subtitle');
-        const statusEl = document.getElementById('intro-status');
-        const statusText = document.getElementById('intro-status-text');
         const bulbSection = document.getElementById('intro-bulb-section');
 
-        if (topBar && elapsed > 0.4) topBar.classList.remove('opacity-0');
         if (subtitle && elapsed > 1.0) subtitle.classList.remove('opacity-0');
-        if (statusEl && elapsed > 0.6) statusEl.classList.remove('opacity-0');
-
-        if (statusText) {
-            if (elapsed > 2.6) {
-                statusText.textContent = 'Parametric Geometry Ready';
-            } else if (elapsed > 1.5) {
-                statusText.textContent = 'Illuminating Subsurface Shell...';
-            }
-        }
 
         if (bulbSection && (elapsed > 2.0 || prefersReducedMotion)) {
             bulbSection.classList.remove('opacity-0', 'translate-y-3');
@@ -2577,13 +2564,15 @@ let introAudio = null;
 let isAudioMuted = false;
 
 function initIntroAudio() {
+    const audioBtn = document.getElementById('btn-intro-audio');
+    if (!audioBtn) return;
+
     if (!introAudio) {
         introAudio = new Audio('moon.mp3');
         introAudio.loop = true;
         introAudio.volume = 0.75;
     }
 
-    const audioBtn = document.getElementById('btn-intro-audio');
     const audioIcon = document.getElementById('intro-audio-icon');
     const audioLabel = document.getElementById('intro-audio-label');
 
@@ -2617,12 +2606,14 @@ function initIntroAudio() {
 }
 
 function toggleIntroAudio() {
+    const audioBtn = document.getElementById('btn-intro-audio');
+    if (!audioBtn) return;
+
     if (!introAudio) {
         initIntroAudio();
         return;
     }
 
-    const audioBtn = document.getElementById('btn-intro-audio');
     const audioIcon = document.getElementById('intro-audio-icon');
     const audioLabel = document.getElementById('intro-audio-label');
 
@@ -2841,14 +2832,10 @@ function playIntroAgain() {
     introEl.style.display = 'flex';
     introEl.classList.remove('intro-dismissed');
 
-    const topBar = document.getElementById('intro-topbar');
     const subtitle = document.getElementById('intro-subtitle');
-    const statusEl = document.getElementById('intro-status');
     const bulbSection = document.getElementById('intro-bulb-section');
 
-    if (topBar) topBar.classList.add('opacity-0');
     if (subtitle) subtitle.classList.add('opacity-0');
-    if (statusEl) statusEl.classList.add('opacity-0');
     if (bulbSection) bulbSection.classList.add('opacity-0', 'translate-y-3');
 
     // Reset 3D interactive pointer orientation
