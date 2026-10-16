@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,9 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Three.js & OrbitControls -->
@@ -23,6 +26,7 @@
                         sans: ['Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
+
                     colors: {
                         cad: {
                             bg: '#0c0d10',
@@ -39,14 +43,17 @@
     </script>
 
     <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=2.4">
+    <link rel="stylesheet" href="style.css?v=3.3">
 </head>
+
 <body class="flex flex-col h-screen w-screen overflow-hidden antialiased">
 
     <!-- ================================================================= -->
     <!-- PRE-APPLICATION ANIMATED INTRO (LUMINA CAD 3D PIXEL FORMATION)     -->
     <!-- ================================================================= -->
-    <div id="lumina-intro" class="fixed inset-0 flex flex-col justify-end items-center pointer-events-auto select-none overflow-hidden" style="z-index: 9999;" role="dialog" aria-modal="true" aria-label="LuminaCAD Introduction">
+    <div id="lumina-intro"
+        class="fixed inset-0 flex flex-col justify-end items-center pointer-events-auto select-none overflow-hidden"
+        style="z-index: 9999;" role="dialog" aria-modal="true" aria-label="LuminaCAD Introduction">
         <!-- Blueprint subtle grid floor texture -->
         <div class="absolute inset-0 intro-blueprint-grid pointer-events-none opacity-40"></div>
 
@@ -54,10 +61,12 @@
         <canvas id="intro-canvas" class="absolute inset-0 w-full h-full block z-0 outline-none"></canvas>
 
         <!-- Center Bottom: Animated LuminaCAD Title, Subtitle, and Lamp Enter Studio Button -->
-        <div class="relative z-10 flex flex-col items-center justify-end pb-6 sm:pb-8 text-center max-w-xl px-4 pointer-events-auto">
+        <div
+            class="relative z-10 flex flex-col items-center justify-end pb-6 sm:pb-8 text-center max-w-xl px-4 pointer-events-auto">
             <!-- Application Title with Letter-by-Letter Appearance & Color Transitions -->
             <div id="intro-brand" class="mb-4 text-center">
-                <h1 id="intro-title" class="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-tight flex items-center justify-center select-none lumina-title-glow">
+                <h1 id="intro-title"
+                    class="font-extrabold text-3xl sm:text-4xl md:text-5xl tracking-tight flex items-center justify-center select-none lumina-title-glow">
                     <span class="intro-letter" style="--i:0">L</span>
                     <span class="intro-letter" style="--i:1">u</span>
                     <span class="intro-letter" style="--i:2">m</span>
@@ -68,71 +77,75 @@
                     <span class="intro-letter" style="--i:7">A</span>
                     <span class="intro-letter" style="--i:8">D</span>
                 </h1>
-                <p id="intro-subtitle" class="mt-1 text-[11px] sm:text-xs font-mono tracking-[0.22em] text-slate-400 uppercase opacity-0 transition-all duration-1000 delay-500">
+                <p id="intro-subtitle"
+                    class="mt-1 text-[11px] sm:text-xs font-mono tracking-[0.22em] text-slate-400 uppercase opacity-0 transition-all duration-1000 delay-500">
                     Parametric 3D Printable Lamp Studio
                 </p>
             </div>
 
             <!-- Small Lamp-Shaped Enter Button with Multicolor Illumination -->
-            <div id="intro-bulb-section" class="flex flex-col items-center opacity-0 translate-y-3 transition-all duration-700 delay-500">
-                <button id="btn-enter-studio" onclick="enterStudio()" class="small-enter-lamp-btn group" role="button" aria-label="Enter LuminaCAD Studio">
+            <div id="intro-bulb-section"
+                class="flex flex-col items-center opacity-0 translate-y-3 transition-all duration-700 delay-500">
+                <button id="btn-enter-studio" onclick="enterStudio()" class="small-enter-lamp-btn group" role="button"
+                    aria-label="Enter LuminaCAD Studio">
                     <!-- Smooth Multicolor Flowing Illumination Aura around the Lamp Bulb -->
                     <div class="lamp-btn-multicolor-aura"></div>
 
                     <!-- Small Realistic Lamp SVG with Glowing Filament -->
                     <div class="relative z-10 w-9 h-9 flex items-center justify-center shrink-0">
-                        <svg class="w-8 h-8 lamp-icon-bulb-halo transition-transform duration-300 group-hover:scale-110" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-8 h-8 lamp-icon-bulb-halo transition-transform duration-300 group-hover:scale-110"
+                            viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <radialGradient id="smallBulbGrad" cx="50%" cy="40%" r="55%">
-                                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-                                    <stop offset="45%" stop-color="#fef08a" stop-opacity="0.8"/>
-                                    <stop offset="85%" stop-color="#f59e0b" stop-opacity="0.4"/>
-                                    <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.15"/>
+                                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+                                    <stop offset="45%" stop-color="#fef08a" stop-opacity="0.8" />
+                                    <stop offset="85%" stop-color="#f59e0b" stop-opacity="0.4" />
+                                    <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.15" />
                                 </radialGradient>
                                 <linearGradient id="smallThreadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#64748b"/>
-                                    <stop offset="50%" stop-color="#cbd5e1"/>
-                                    <stop offset="100%" stop-color="#475569"/>
+                                    <stop offset="0%" stop-color="#64748b" />
+                                    <stop offset="50%" stop-color="#cbd5e1" />
+                                    <stop offset="100%" stop-color="#475569" />
                                 </linearGradient>
                             </defs>
 
                             <!-- Lamp Bulb Glass Body -->
-                            <path d="M12 21 C10 18 7 15 7 11 C7 6 11 2 16 2 C21 2 25 6 25 11 C25 15 22 18 20 21 Z" 
-                                  fill="url(#smallBulbGrad)" 
-                                  stroke="rgba(255, 255, 255, 0.6)" 
-                                  stroke-width="0.8"/>
+                            <path d="M12 21 C10 18 7 15 7 11 C7 6 11 2 16 2 C21 2 25 6 25 11 C25 15 22 18 20 21 Z"
+                                fill="url(#smallBulbGrad)" stroke="rgba(255, 255, 255, 0.6)" stroke-width="0.8" />
 
                             <!-- Subtle Glowing Filament -->
-                            <path d="M13.5 11 C14.5 7.5, 17.5 7.5, 18.5 11" 
-                                  stroke="#ffffff" 
-                                  stroke-width="1.2" 
-                                  stroke-linecap="round" 
-                                  fill="none" 
-                                  class="lamp-icon-filament"/>
-                            
+                            <path d="M13.5 11 C14.5 7.5, 17.5 7.5, 18.5 11" stroke="#ffffff" stroke-width="1.2"
+                                stroke-linecap="round" fill="none" class="lamp-icon-filament" />
+
                             <!-- Internal Stem & Lead Wires -->
-                            <line x1="14" y1="11" x2="14.5" y2="20" stroke="#d97706" stroke-width="0.6"/>
-                            <line x1="18" y1="11" x2="17.5" y2="20" stroke="#d97706" stroke-width="0.6"/>
+                            <line x1="14" y1="11" x2="14.5" y2="20" stroke="#d97706" stroke-width="0.6" />
+                            <line x1="18" y1="11" x2="17.5" y2="20" stroke="#d97706" stroke-width="0.6" />
 
                             <!-- Metal Screw Base Threads -->
-                            <path d="M12 21 Q16 22.5 20 21 L19.8 23.5 Q16 25 12.2 23.5 Z" fill="url(#smallThreadGrad)" stroke="#334155" stroke-width="0.5"/>
-                            <path d="M12.2 23.5 Q16 25 19.8 23.5 L19.5 26 Q16 27.5 12.5 26 Z" fill="url(#smallThreadGrad)" stroke="#334155" stroke-width="0.5"/>
-                            <path d="M13.2 26 Q16 27.5 18.8 26 L18.2 28.5 Q16 29.5 13.8 28.5 Z" fill="#181a20" stroke="#0f172a" stroke-width="0.5"/>
-                            
+                            <path d="M12 21 Q16 22.5 20 21 L19.8 23.5 Q16 25 12.2 23.5 Z" fill="url(#smallThreadGrad)"
+                                stroke="#334155" stroke-width="0.5" />
+                            <path d="M12.2 23.5 Q16 25 19.8 23.5 L19.5 26 Q16 27.5 12.5 26 Z"
+                                fill="url(#smallThreadGrad)" stroke="#334155" stroke-width="0.5" />
+                            <path d="M13.2 26 Q16 27.5 18.8 26 L18.2 28.5 Q16 29.5 13.8 28.5 Z" fill="#181a20"
+                                stroke="#0f172a" stroke-width="0.5" />
+
                             <!-- Bottom Solder Contact Point -->
-                            <circle cx="16" cy="29" r="1.2" fill="#94a3b8"/>
+                            <circle cx="16" cy="29" r="1.2" fill="#94a3b8" />
 
                             <!-- Specular Highlight Sheen -->
-                            <path d="M10 8 C10.5 5 12.5 3.5 15 3.2" stroke="rgba(255, 255, 255, 0.85)" stroke-width="0.8" stroke-linecap="round" fill="none"/>
+                            <path d="M10 8 C10.5 5 12.5 3.5 15 3.2" stroke="rgba(255, 255, 255, 0.85)"
+                                stroke-width="0.8" stroke-linecap="round" fill="none" />
                         </svg>
                     </div>
 
                     <!-- Elegant Enter Studio Text -->
                     <div class="relative z-10 flex items-center gap-2 pr-1">
-                        <span class="text-xs sm:text-sm font-bold font-mono tracking-wider text-slate-100 group-hover:text-amber-300 transition-colors uppercase">
+                        <span
+                            class="text-xs sm:text-sm font-bold font-mono tracking-wider text-slate-100 group-hover:text-amber-300 transition-colors uppercase">
                             Enter Studio
                         </span>
-                        <i class="ph-bold ph-arrow-right text-amber-400 text-sm transition-transform group-hover:translate-x-1"></i>
+                        <i
+                            class="ph-bold ph-arrow-right text-amber-400 text-sm transition-transform group-hover:translate-x-1"></i>
                     </div>
                 </button>
             </div>
@@ -143,64 +156,78 @@
     <header class="h-14 bg-cad-panel border-b border-cad-border px-4 flex items-center justify-between z-30 shrink-0">
         <!-- Brand & Enhanced Glowing Lamp Logo -->
         <div class="flex items-center gap-3">
-            <div id="brand-lamp-logo" class="relative w-9 h-9 rounded-xl bg-gradient-to-br from-slate-900 via-cad-panel to-slate-950 p-[1px] border border-amber-500/35 flex items-center justify-center overflow-hidden shadow-lg shadow-amber-500/10 transition-all duration-300" title="LuminaCAD Parametric Studio">
+            <div id="brand-lamp-logo"
+                class="relative w-9 h-9 rounded-xl bg-gradient-to-br from-slate-900 via-cad-panel to-slate-950 p-[1px] border border-amber-500/35 flex items-center justify-center overflow-hidden shadow-lg shadow-amber-500/10 transition-all duration-300"
+                title="LuminaCAD Parametric Studio">
                 <!-- Inner warm glow backdrop -->
                 <div class="lamp-ambient-glow absolute inset-0 pointer-events-none"></div>
 
                 <!-- Modern precision lamp icon with glowing internal bulb -->
-                <svg class="w-5 h-5 relative z-10 lamp-logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-5 h-5 relative z-10 lamp-logo-svg" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <!-- Warm bulb radial filament glow -->
                         <radialGradient id="lampBulbCore" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stop-color="#ffffff"/>
-                            <stop offset="35%" stop-color="#fef08a"/>
-                            <stop offset="70%" stop-color="#f59e0b"/>
-                            <stop offset="100%" stop-color="rgba(217, 119, 6, 0)"/>
+                            <stop offset="0%" stop-color="#ffffff" />
+                            <stop offset="35%" stop-color="#fef08a" />
+                            <stop offset="70%" stop-color="#f59e0b" />
+                            <stop offset="100%" stop-color="rgba(217, 119, 6, 0)" />
                         </radialGradient>
                         <!-- Downward light cone gradient -->
                         <linearGradient id="lampLightBeam" x1="50%" y1="0%" x2="50%" y2="100%">
-                            <stop offset="0%" stop-color="rgba(251, 191, 36, 0.45)"/>
-                            <stop offset="100%" stop-color="rgba(251, 191, 36, 0.0)"/>
+                            <stop offset="0%" stop-color="rgba(251, 191, 36, 0.45)" />
+                            <stop offset="100%" stop-color="rgba(251, 191, 36, 0.0)" />
                         </linearGradient>
                         <!-- Shade translucent gradient -->
                         <linearGradient id="lampShadeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.9"/>
-                            <stop offset="50%" stop-color="#d97706" stop-opacity="0.8"/>
-                            <stop offset="100%" stop-color="#78350f" stop-opacity="0.95"/>
+                            <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.9" />
+                            <stop offset="50%" stop-color="#d97706" stop-opacity="0.8" />
+                            <stop offset="100%" stop-color="#78350f" stop-opacity="0.95" />
                         </linearGradient>
                     </defs>
 
                     <!-- Downward soft warm light cone -->
-                    <polygon points="6.5,14 17.5,14 20.5,20.5 3.5,20.5" fill="url(#lampLightBeam)" class="lamp-glow-cone"/>
+                    <polygon points="6.5,14 17.5,14 20.5,20.5 3.5,20.5" fill="url(#lampLightBeam)"
+                        class="lamp-glow-cone" />
 
                     <!-- Lamp Base & Slender Stem -->
-                    <line x1="12" y1="14" x2="12" y2="20.5" stroke="#94a3b8" stroke-width="1.25" stroke-linecap="round"/>
-                    <path d="M8 20.5 L16 20.5" stroke="#cbd5e1" stroke-width="1.75" stroke-linecap="round"/>
+                    <line x1="12" y1="14" x2="12" y2="20.5" stroke="#94a3b8" stroke-width="1.25"
+                        stroke-linecap="round" />
+                    <path d="M8 20.5 L16 20.5" stroke="#cbd5e1" stroke-width="1.75" stroke-linecap="round" />
                     <!-- Soft reflection pool on the base -->
-                    <ellipse cx="12" cy="20.5" rx="4.5" ry="0.8" fill="rgba(251, 191, 36, 0.5)" class="lamp-base-gleam"/>
+                    <ellipse cx="12" cy="20.5" rx="4.5" ry="0.8" fill="rgba(251, 191, 36, 0.5)"
+                        class="lamp-base-gleam" />
 
                     <!-- Internal Glowing Filament / Bulb -->
-                    <circle cx="12" cy="12.5" r="2.5" fill="url(#lampBulbCore)" class="lamp-bulb-element"/>
+                    <circle cx="12" cy="12.5" r="2.5" fill="url(#lampBulbCore)" class="lamp-bulb-element" />
 
                     <!-- Modern Flared Lamp Shade with subtle ribs -->
-                    <path d="M8 5.5 C8 5.2 8.2 5 8.5 5 L15.5 5 C15.8 5 16 5.2 16 5.5 L18.5 13.5 C18.6 13.8 18.4 14 18.1 14 L5.9 14 C5.6 14 5.4 13.8 5.5 13.5 Z" 
-                          stroke="#fbbf24" stroke-width="1.25" stroke-linejoin="round" fill="url(#lampShadeGrad)" class="lamp-shade-shell"/>
+                    <path
+                        d="M8 5.5 C8 5.2 8.2 5 8.5 5 L15.5 5 C15.8 5 16 5.2 16 5.5 L18.5 13.5 C18.6 13.8 18.4 14 18.1 14 L5.9 14 C5.6 14 5.4 13.8 5.5 13.5 Z"
+                        stroke="#fbbf24" stroke-width="1.25" stroke-linejoin="round" fill="url(#lampShadeGrad)"
+                        class="lamp-shade-shell" />
 
                     <!-- Subtle Shade Rib Accents -->
-                    <line x1="10" y1="5" x2="8.5" y2="14" stroke="rgba(255, 255, 255, 0.4)" stroke-width="0.75" stroke-linecap="round"/>
-                    <line x1="12" y1="5" x2="12" y2="14" stroke="rgba(255, 255, 255, 0.6)" stroke-width="0.75" stroke-linecap="round"/>
-                    <line x1="14" y1="5" x2="15.5" y2="14" stroke="rgba(255, 255, 255, 0.4)" stroke-width="0.75" stroke-linecap="round"/>
-                    
+                    <line x1="10" y1="5" x2="8.5" y2="14" stroke="rgba(255, 255, 255, 0.4)" stroke-width="0.75"
+                        stroke-linecap="round" />
+                    <line x1="12" y1="5" x2="12" y2="14" stroke="rgba(255, 255, 255, 0.6)" stroke-width="0.75"
+                        stroke-linecap="round" />
+                    <line x1="14" y1="5" x2="15.5" y2="14" stroke="rgba(255, 255, 255, 0.4)" stroke-width="0.75"
+                        stroke-linecap="round" />
+
                     <!-- Shade Finial / Top Cap -->
-                    <circle cx="12" cy="4.2" r="0.9" fill="#fbbf24"/>
+                    <circle cx="12" cy="4.2" r="0.9" fill="#fbbf24" />
                 </svg>
             </div>
             <div>
                 <div class="flex items-center gap-2">
                     <h1 class="font-bold text-sm tracking-tight text-white">LuminaCAD</h1>
-                    <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 font-semibold">3D Print Studio</span>
+                    <span
+                        class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 font-semibold">3D
+                        Print Studio</span>
                 </div>
-                <p class="text-[11px] text-slate-400 hidden sm:block">Parametric Lamp Shade & Socket Fitter Generator (1 unit = 1mm)</p>
+                <p class="text-[11px] text-slate-400 hidden sm:block">Parametric Lamp Shade & Socket Fitter Generator (1
+                    unit = 1mm)</p>
             </div>
         </div>
 
@@ -210,58 +237,71 @@
                 <i class="ph-fill ph-sparkle text-amber-400"></i> Presets:
             </span>
             <!-- 1. Nordic Spiral -->
-            <button onclick="applyPreset('nordic')" id="preset-nordic" class="preset-pill active" title="Nordic Spiral: Twisted spiral flutes on bulbous profile">
+            <button onclick="applyPreset('nordic')" id="preset-nordic" class="preset-pill active"
+                title="Nordic Spiral: Twisted spiral flutes on bulbous profile">
                 <svg class="preset-lamp-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 14 C2.5 10 3 4 8 2 C13 4 13.5 10 12 14 Z" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15"/>
-                    <path d="M6 13 Q7 8 10 3" stroke="currentColor" stroke-width="0.8" fill="none"/>
-                    <path d="M9 14 Q10 9 12 5" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                    <path d="M4 14 C2.5 10 3 4 8 2 C13 4 13.5 10 12 14 Z" stroke="currentColor" stroke-width="1.2"
+                        fill="currentColor" fill-opacity="0.15" />
+                    <path d="M6 13 Q7 8 10 3" stroke="currentColor" stroke-width="0.8" fill="none" />
+                    <path d="M9 14 Q10 9 12 5" stroke="currentColor" stroke-width="0.8" fill="none" />
                 </svg>
                 <span>Nordic Spiral</span>
             </button>
 
             <!-- 2. Origami Lotus -->
-            <button onclick="applyPreset('lotus')" id="preset-lotus" class="preset-pill" title="Origami Lotus: Sharp geometric accordion pleats on teardrop profile">
+            <button onclick="applyPreset('lotus')" id="preset-lotus" class="preset-pill"
+                title="Origami Lotus: Sharp geometric accordion pleats on teardrop profile">
                 <svg class="preset-lamp-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.5 13 L2.5 8 L5.5 3 L8 1.5 L10.5 3 L13.5 8 L11.5 13 Z" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15"/>
-                    <path d="M8 1.5 L8 13.5 M5.5 3 L8 13.5 M10.5 3 L8 13.5" stroke="currentColor" stroke-width="0.7"/>
+                    <path d="M4.5 13 L2.5 8 L5.5 3 L8 1.5 L10.5 3 L13.5 8 L11.5 13 Z" stroke="currentColor"
+                        stroke-width="1.2" fill="currentColor" fill-opacity="0.15" />
+                    <path d="M8 1.5 L8 13.5 M5.5 3 L8 13.5 M10.5 3 L8 13.5" stroke="currentColor" stroke-width="0.7" />
                 </svg>
                 <span>Origami Lotus</span>
             </button>
 
             <!-- 3. Mid-Century Ribbed -->
-            <button onclick="applyPreset('midcentury')" id="preset-midcentury" class="preset-pill" title="Mid-Century Ribbed: Vertical linear flutes on bell curve profile">
+            <button onclick="applyPreset('midcentury')" id="preset-midcentury" class="preset-pill"
+                title="Mid-Century Ribbed: Vertical linear flutes on bell curve profile">
                 <svg class="preset-lamp-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.5 14 C3 8 5.5 3 8 2.5 C10.5 3 13 8 13.5 14 Z" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15"/>
-                    <line x1="6" y1="4" x2="5" y2="14" stroke="currentColor" stroke-width="0.8"/>
-                    <line x1="8" y1="2.5" x2="8" y2="14" stroke="currentColor" stroke-width="0.8"/>
-                    <line x1="10" y1="4" x2="11" y2="14" stroke="currentColor" stroke-width="0.8"/>
+                    <path d="M2.5 14 C3 8 5.5 3 8 2.5 C10.5 3 13 8 13.5 14 Z" stroke="currentColor" stroke-width="1.2"
+                        fill="currentColor" fill-opacity="0.15" />
+                    <line x1="6" y1="4" x2="5" y2="14" stroke="currentColor" stroke-width="0.8" />
+                    <line x1="8" y1="2.5" x2="8" y2="14" stroke="currentColor" stroke-width="0.8" />
+                    <line x1="10" y1="4" x2="11" y2="14" stroke="currentColor" stroke-width="0.8" />
                 </svg>
                 <span>Mid-Century Ribbed</span>
             </button>
 
             <!-- 4. Diamond Lattice -->
-            <button onclick="applyPreset('honeycomb')" id="preset-honeycomb" class="preset-pill" title="Diamond Lattice: Dual helical criss-cross mesh on bulbous profile">
+            <button onclick="applyPreset('honeycomb')" id="preset-honeycomb" class="preset-pill"
+                title="Diamond Lattice: Dual helical criss-cross mesh on bulbous profile">
                 <svg class="preset-lamp-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.5 13.5 C2 9 4 4 8 2 C12 4 14 9 12.5 13.5 Z" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15"/>
-                    <path d="M4 11 L12 4 M4 6 L12 13" stroke="currentColor" stroke-width="0.8"/>
+                    <path d="M3.5 13.5 C2 9 4 4 8 2 C12 4 14 9 12.5 13.5 Z" stroke="currentColor" stroke-width="1.2"
+                        fill="currentColor" fill-opacity="0.15" />
+                    <path d="M4 11 L12 4 M4 6 L12 13" stroke="currentColor" stroke-width="0.8" />
                 </svg>
                 <span>Diamond Lattice</span>
             </button>
 
             <!-- 5. Minimalist Bell -->
-            <button onclick="applyPreset('minimal')" id="preset-minimal" class="preset-pill" title="Minimalist Bell: Clean organic bell contour with horizontal ripple rings">
+            <button onclick="applyPreset('minimal')" id="preset-minimal" class="preset-pill"
+                title="Minimalist Bell: Clean organic bell contour with horizontal ripple rings">
                 <svg class="preset-lamp-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 14 C2.5 8 6 3 8 2 C10 3 13.5 8 14 14 Z" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15"/>
-                    <path d="M4.5 11 Q8 12.5 11.5 11 M5.5 8 Q8 9.5 10.5 8" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                    <path d="M2 14 C2.5 8 6 3 8 2 C10 3 13.5 8 14 14 Z" stroke="currentColor" stroke-width="1.2"
+                        fill="currentColor" fill-opacity="0.15" />
+                    <path d="M4.5 11 Q8 12.5 11.5 11 M5.5 8 Q8 9.5 10.5 8" stroke="currentColor" stroke-width="0.8"
+                        fill="none" />
                 </svg>
                 <span>Minimalist Bell</span>
             </button>
 
             <!-- 6. Cyber Faceted -->
-            <button onclick="applyPreset('cyber')" id="preset-cyber" class="preset-pill" title="Cyber Faceted: Stepped low-poly angular facets on hourglass profile">
+            <button onclick="applyPreset('cyber')" id="preset-cyber" class="preset-pill"
+                title="Cyber Faceted: Stepped low-poly angular facets on hourglass profile">
                 <svg class="preset-lamp-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 14 L5.5 8 L3.5 2 L12.5 2 L10.5 8 L13 14 Z" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.15"/>
-                    <line x1="5.5" y1="8" x2="10.5" y2="8" stroke="currentColor" stroke-width="0.8"/>
+                    <path d="M3 14 L5.5 8 L3.5 2 L12.5 2 L10.5 8 L13 14 Z" stroke="currentColor" stroke-width="1.2"
+                        fill="currentColor" fill-opacity="0.15" />
+                    <line x1="5.5" y1="8" x2="10.5" y2="8" stroke="currentColor" stroke-width="0.8" />
                 </svg>
                 <span>Cyber Faceted</span>
             </button>
@@ -269,11 +309,13 @@
 
         <!-- Action Buttons -->
         <div class="flex items-center gap-2.5">
-            <button onclick="playIntroAgain()" title="Replay Intro Presentation" class="px-3 py-1.5 rounded-lg bg-cad-bg hover:bg-cad-hover border border-cad-border text-xs font-medium text-slate-300 flex items-center gap-1.5 transition">
+            <button onclick="playIntroAgain()" title="Replay Intro Presentation"
+                class="px-3 py-1.5 rounded-lg bg-cad-bg hover:bg-cad-hover border border-cad-border text-xs font-medium text-slate-300 flex items-center gap-1.5 transition">
                 <i class="ph-bold ph-play text-amber-400"></i>
                 <span class="hidden md:inline">Intro</span>
             </button>
-            <button onclick="randomizeDesign()" title="Randomize Shade" class="px-3.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-xs font-semibold text-amber-300 flex items-center gap-1.5 shadow-lg shadow-amber-500/10 transition">
+            <button onclick="randomizeDesign()" title="Randomize Shade"
+                class="px-3.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-xs font-semibold text-amber-300 flex items-center gap-1.5 shadow-lg shadow-amber-500/10 transition">
                 <i class="ph-bold ph-shuffle text-amber-400"></i>
                 <span>Randomize</span>
             </button>
@@ -287,60 +329,77 @@
         <main class="flex-1 relative bg-cad-bg overflow-hidden" id="viewport-container">
             <canvas id="three-canvas" class="w-full h-full block outline-none"></canvas>
 
-            <!-- TOP-LEFT OVERLAY: REAL-TIME 3D PRINT ESTIMATOR & METRICS -->
-            <div class="absolute top-4 left-4 z-20 pointer-events-auto flex flex-col gap-2 max-w-xs">
-                <div class="glass-panel rounded-xl p-3.5 shadow-2xl">
-                    <div class="flex items-center justify-between mb-2.5 pb-1.5 border-b border-white/10">
-                        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                            <i class="ph-fill ph-cube text-amber-400 text-sm"></i> Print Telemetry
+            <!-- TOP-LEFT OVERLAY: REAL-TIME 3D PRINT ESTIMATOR & METRICS (Reduced & Compact) -->
+            <div id="telemetry-container"
+                class="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 pointer-events-auto flex flex-col gap-1.5 w-[205px] sm:w-[225px] max-w-[48vw]">
+                <div class="glass-panel rounded-xl p-2.5 sm:p-3 shadow-xl">
+                    <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-white/10">
+                        <span
+                            class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                            <i class="ph-fill ph-cube text-amber-400 text-xs"></i> Telemetry
                         </span>
-                        <span id="manifold-badge" class="text-[10px] font-mono bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded">MANIFOLD MESH</span>
+                        <span id="manifold-badge"
+                            class="text-[9px] font-mono bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-1 py-0.2 rounded font-semibold">MANIFOLD</span>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                    <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
                         <div>
-                            <div class="text-[10px] text-slate-400">Bounding Box (XYZ)</div>
-                            <div id="stat-bbox" class="font-mono font-semibold text-white">160×160×200 mm</div>
+                            <div class="text-[9px] text-slate-400 leading-tight">Bounding Box</div>
+                            <div id="stat-bbox"
+                                class="font-mono font-semibold text-white truncate text-[10px] sm:text-[11px]">
+                                160×160×200</div>
                         </div>
                         <div>
-                            <div class="text-[10px] text-slate-400">Est. Filament (PLA)</div>
-                            <div id="stat-weight" class="font-mono font-semibold text-amber-400">~142 g <span class="text-slate-400 font-normal">(47m)</span></div>
+                            <div class="text-[9px] text-slate-400 leading-tight">Est. PLA</div>
+                            <div id="stat-weight"
+                                class="font-mono font-semibold text-amber-400 truncate text-[10px] sm:text-[11px]">~142g
+                                <span class="text-slate-400 font-normal text-[9px]">(47m)</span></div>
                         </div>
                         <div>
-                            <div class="text-[10px] text-slate-400">Est. Print Time</div>
-                            <div id="stat-time" class="font-mono font-semibold text-slate-200">~3h 45m</div>
+                            <div class="text-[9px] text-slate-400 leading-tight">Print Time</div>
+                            <div id="stat-time"
+                                class="font-mono font-semibold text-slate-200 text-[10px] sm:text-[11px]">~3h 45m</div>
                         </div>
                         <div>
-                            <div class="text-[10px] text-slate-400">Triangles / Faces</div>
-                            <div id="stat-tris" class="font-mono font-semibold text-slate-200">84,240</div>
+                            <div class="text-[9px] text-slate-400 leading-tight">Triangles</div>
+                            <div id="stat-tris"
+                                class="font-mono font-semibold text-slate-200 text-[10px] sm:text-[11px]">84,240</div>
                         </div>
                     </div>
 
                     <!-- Overhang Printability Status -->
-                    <div id="overhang-alert" class="mt-3 pt-2.5 border-t border-white/10 flex items-start gap-2 text-[11px]">
-                        <i id="overhang-icon" class="ph-fill ph-check-circle text-emerald-400 text-base shrink-0 mt-0.5"></i>
-                        <div>
-                            <div id="overhang-title" class="font-medium text-emerald-300">Support-Free Printable</div>
-                            <div id="overhang-desc" class="text-[10px] text-slate-400">Max overhang angle is 28° (safe &lt; 45°).</div>
+                    <div id="overhang-alert"
+                        class="mt-1.5 pt-1.5 border-t border-white/10 flex items-start gap-1.5 text-[10px]">
+                        <i id="overhang-icon"
+                            class="ph-fill ph-check-circle text-emerald-400 text-sm shrink-0 mt-0.5"></i>
+                        <div class="min-w-0">
+                            <div id="overhang-title" class="font-medium text-emerald-300 leading-tight truncate">
+                                Support-Free Safe</div>
+                            <div id="overhang-desc" class="text-[9px] text-slate-400 leading-tight truncate">Max
+                                overhang 28° (&lt;45°)</div>
                         </div>
                     </div>
 
                     <!-- AI Concept Badge (Visible when generated by Gemini) -->
-                    <div id="ai-concept-banner" class="hidden mt-2.5 pt-2.5 border-t border-white/10">
+                    <div id="ai-concept-banner" class="hidden mt-1.5 pt-1.5 border-t border-white/10">
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-semibold uppercase tracking-wider text-purple-300 flex items-center gap-1">
-                                <i class="ph-fill ph-sparkle text-amber-400"></i> Gemini CAD Concept
+                            <span
+                                class="text-[9px] font-semibold uppercase tracking-wider text-purple-300 flex items-center gap-1">
+                                <i class="ph-fill ph-sparkle text-amber-400"></i> AI Concept
                             </span>
                         </div>
-                        <div id="ai-concept-name" class="text-xs font-bold text-white mt-0.5">Kyoto Bamboo Lantern</div>
-                        <div id="ai-concept-desc" class="text-[10px] text-slate-300 leading-snug mt-0.5">Inspired by soft organic pleats and warm diffused light.</div>
+                        <div id="ai-concept-name" class="text-[11px] font-bold text-white mt-0.5 truncate">Kyoto Bamboo
+                            Lantern</div>
+                        <div id="ai-concept-desc" class="text-[9px] text-slate-300 leading-tight mt-0.5 line-clamp-2">
+                            Inspired by soft organic pleats and warm diffused light.</div>
                     </div>
                 </div>
 
                 <!-- Mobile/Tablet Preset Selector -->
-                <div class="xl:hidden glass-panel rounded-xl p-2 flex items-center gap-2">
-                    <span class="text-[11px] text-slate-400 pl-1">Preset:</span>
-                    <select onchange="applyPreset(this.value)" class="bg-cad-bg text-xs text-slate-200 rounded px-2 py-1 border border-cad-border outline-none flex-1">
+                <div class="xl:hidden glass-panel rounded-lg p-1.5 flex items-center gap-1.5 text-[10px]">
+                    <span class="text-[10px] text-slate-400 pl-0.5">Preset:</span>
+                    <select onchange="applyPreset(this.value)"
+                        class="bg-cad-bg text-[10px] text-slate-200 rounded px-1.5 py-0.5 border border-cad-border outline-none flex-1 truncate">
                         <option value="nordic">Nordic Spiral</option>
                         <option value="lotus">Origami Lotus</option>
                         <option value="midcentury">Mid-Century Ribbed</option>
@@ -351,82 +410,194 @@
                 </div>
             </div>
 
-            <!-- TOP-RIGHT OVERLAY: FILAMENT & BULB QUICK BAR -->
-            <div class="absolute top-4 right-4 z-20 hidden sm:flex flex-col gap-2">
-                <div class="glass-panel rounded-xl p-3 shadow-2xl w-60">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                            <i class="ph-fill ph-lightbulb-filament text-amber-400 text-sm"></i> Bulb & Filament
+            <!-- TOP-RIGHT OVERLAY: FILAMENT, BULB & CREATOR SPOTLIGHT (Balanced Medium Size) -->
+            <div id="bulb-filament-container"
+                class="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex flex-col gap-2 w-[215px] sm:w-[230px] max-w-[48vw]">
+                <!-- 1. MEDIUM-SIZED BULB & FILAMENT BOX -->
+                <div class="glass-panel rounded-xl p-2.5 sm:p-3 shadow-2xl w-full">
+                    <div class="flex items-center justify-between mb-1.5 pb-1 border-b border-white/10">
+                        <span
+                            class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                            <i class="ph-fill ph-lightbulb-filament text-amber-400 text-xs"></i> Bulb & Filament
                         </span>
-                        <button onclick="toggleDarkRoom()" id="btn-room-mode" class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-medium hover:bg-amber-500/30 transition">
+                        <button onclick="toggleDarkRoom()" id="btn-room-mode"
+                            class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-medium hover:bg-amber-500/30 transition">
                             Dark Room
                         </button>
                     </div>
 
                     <!-- Swatches -->
-                    <div class="flex items-center justify-between gap-1.5 my-2">
-                        <button onclick="setMaterialPreset('warm_pla')" title="Warm White PLA (Translucent)" class="w-7 h-7 rounded-full border-2 border-amber-400 shadow-inner transition transform hover:scale-110" style="background: #fff9ec;"></button>
-                        <button onclick="setMaterialPreset('clear_petg')" title="Natural Clear PETG" class="w-7 h-7 rounded-full border border-white/30 shadow-inner transition transform hover:scale-110" style="background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);"></button>
-                        <button onclick="setMaterialPreset('terracotta')" title="Matte Terracotta PLA" class="w-7 h-7 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110" style="background: #d96b43;"></button>
-                        <button onclick="setMaterialPreset('silk_gold')" title="Silk Gold PLA" class="w-7 h-7 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110" style="background: #eab308;"></button>
-                        <button onclick="setMaterialPreset('emerald')" title="Translucent Emerald PETG" class="w-7 h-7 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110" style="background: #10b981;"></button>
-                        <button onclick="setMaterialPreset('matte_black')" title="Matte Charcoal Black" class="w-7 h-7 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110" style="background: #262930;"></button>
+                    <div class="flex items-center justify-between gap-1 my-1.5">
+                        <button onclick="setMaterialPreset('warm_pla')" title="Warm White PLA (Translucent)"
+                            class="w-6 h-6 rounded-full border-2 border-amber-400 shadow-inner transition transform hover:scale-110"
+                            style="background: #fff9ec;"></button>
+                        <button onclick="setMaterialPreset('clear_petg')" title="Natural Clear PETG"
+                            class="w-6 h-6 rounded-full border border-white/30 shadow-inner transition transform hover:scale-110"
+                            style="background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);"></button>
+                        <button onclick="setMaterialPreset('terracotta')" title="Matte Terracotta PLA"
+                            class="w-6 h-6 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110"
+                            style="background: #d96b43;"></button>
+                        <button onclick="setMaterialPreset('silk_gold')" title="Silk Gold PLA"
+                            class="w-6 h-6 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110"
+                            style="background: #eab308;"></button>
+                        <button onclick="setMaterialPreset('emerald')" title="Translucent Emerald PETG"
+                            class="w-6 h-6 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110"
+                            style="background: #10b981;"></button>
+                        <button onclick="setMaterialPreset('matte_black')" title="Matte Charcoal Black"
+                            class="w-6 h-6 rounded-full border border-white/20 shadow-inner transition transform hover:scale-110"
+                            style="background: #262930;"></button>
                     </div>
 
                     <!-- Bulb Brightness Slider -->
-                    <div class="mt-2.5">
-                        <div class="flex justify-between text-[11px] mb-1">
+                    <div class="mt-1.5">
+                        <div class="flex justify-between text-[10px] mb-0.5">
                             <span class="text-slate-400">Bulb Lumens</span>
                             <span id="val-bulbPower" class="font-mono text-amber-400">85%</span>
                         </div>
-                        <input type="range" id="ctrl-bulbPower" min="0" max="150" value="85" oninput="updateLightingFromUI()">
+                        <input type="range" id="ctrl-bulbPower" min="0" max="150" value="85"
+                            oninput="updateLightingFromUI()"
+                            class="w-full accent-amber-500 h-1 bg-white/10 rounded cursor-pointer">
                     </div>
 
                     <!-- Kelvin Temp Slider -->
-                    <div class="mt-2">
-                        <div class="flex justify-between text-[11px] mb-1">
+                    <div class="mt-1.5">
+                        <div class="flex justify-between text-[10px] mb-0.5">
                             <span class="text-slate-400">Color Temp</span>
                             <span id="val-bulbKelvin" class="font-mono text-amber-300">2700K Warm</span>
                         </div>
-                        <input type="range" id="ctrl-bulbKelvin" min="2200" max="6500" step="100" value="2700" oninput="updateLightingFromUI()">
+                        <input type="range" id="ctrl-bulbKelvin" min="2200" max="6500" step="100" value="2700"
+                            oninput="updateLightingFromUI()"
+                            class="w-full accent-amber-500 h-1 bg-white/10 rounded cursor-pointer">
                     </div>
 
                     <!-- Functional Custom Lamp Colors Option -->
-                    <div class="mt-2.5 pt-2 border-t border-white/10">
-                        <div class="flex items-center justify-between text-[11px] mb-1.5">
-                            <span class="text-slate-300 font-semibold flex items-center gap-1.5">
+                    <div class="mt-1.5 pt-1.5 border-t border-white/10">
+                        <div class="flex items-center justify-between text-[10px] mb-1">
+                            <span class="text-slate-300 font-semibold flex items-center gap-1">
                                 <i class="ph-fill ph-palette text-amber-400"></i>
-                                <span>Custom Lamp Color</span>
+                                <span>Custom Color</span>
                             </span>
-                            <button onclick="resetCustomLampColor()" class="text-[10px] text-slate-400 hover:text-amber-300 underline decoration-slate-600 transition" title="Reset to Warm Amber">
+                            <button onclick="resetCustomLampColor()"
+                                class="text-[9px] text-slate-400 hover:text-amber-300 underline decoration-slate-600 transition"
+                                title="Reset to Warm Amber">
                                 Reset
                             </button>
                         </div>
 
                         <!-- Spectrum Picker & Four Model-Matching Presets -->
-                        <div class="flex items-center justify-between gap-1.5">
-                            <!-- Rainbow Spectrum Input + Hex Badge -->
-                            <div class="flex items-center gap-1.5" title="Pick any custom color from the full spectrum">
-                                <input type="color" id="picker-custom-lamp" value="#f59e0b" oninput="setCustomLampColor(this.value)" class="custom-color-picker-input">
-                                <span id="label-custom-lamp-hex" class="text-[10px] font-mono text-slate-300 font-semibold tracking-wider">#F59E0B</span>
+                        <div class="flex items-center justify-between gap-1">
+                            <div class="flex items-center gap-1" title="Pick any custom color from the full spectrum">
+                                <input type="color" id="picker-custom-lamp" value="#f59e0b"
+                                    oninput="setCustomLampColor(this.value)" class="custom-color-picker-input">
+                                <span id="label-custom-lamp-hex"
+                                    class="text-[9px] font-mono text-slate-300 font-semibold tracking-wider">#F59E0B</span>
                             </div>
 
-                            <!-- Four Predefined Colors tailored to Lamp Models -->
                             <div class="flex items-center gap-1">
-                                <button onclick="setCustomLampColor('#f59e0b')" id="swatch-color-amber" title="Warm Amber (Nordic / Lotus default)" class="custom-color-swatch-btn active" style="background-color: #f59e0b; color: #f59e0b;"></button>
-                                <button onclick="setCustomLampColor('#06b6d4')" id="swatch-color-cyan" title="Cyber Neon Cyan (Cyber Faceted)" class="custom-color-swatch-btn" style="background-color: #06b6d4; color: #06b6d4;"></button>
-                                <button onclick="setCustomLampColor('#a855f7')" id="swatch-color-violet" title="Aurora Orchid Violet (Origami / Lotus)" class="custom-color-swatch-btn" style="background-color: #a855f7; color: #a855f7;"></button>
-                                <button onclick="setCustomLampColor('#f8fafc')" id="swatch-color-white" title="Nordic Studio White (Minimalist Bell)" class="custom-color-swatch-btn" style="background-color: #f8fafc; color: #f8fafc;"></button>
+                                <button onclick="setCustomLampColor('#f59e0b')" id="swatch-color-amber"
+                                    title="Warm Amber (Nordic / Lotus default)" class="custom-color-swatch-btn active"
+                                    style="background-color: #f59e0b; color: #f59e0b;"></button>
+                                <button onclick="setCustomLampColor('#06b6d4')" id="swatch-color-cyan"
+                                    title="Cyber Neon Cyan (Cyber Faceted)" class="custom-color-swatch-btn"
+                                    style="background-color: #06b6d4; color: #06b6d4;"></button>
+                                <button onclick="setCustomLampColor('#a855f7')" id="swatch-color-violet"
+                                    title="Aurora Orchid Violet (Origami / Lotus)" class="custom-color-swatch-btn"
+                                    style="background-color: #a855f7; color: #a855f7;"></button>
+                                <button onclick="setCustomLampColor('#f8fafc')" id="swatch-color-white"
+                                    title="Nordic Studio White (Minimalist Bell)" class="custom-color-swatch-btn"
+                                    style="background-color: #f8fafc; color: #f8fafc;"></button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- 2. MEDIUM-SIZED CREATOR SPOTLIGHT BOX -->
+                <div
+                    class="glass-panel rounded-xl p-2.5 sm:p-3 shadow-2xl w-full border border-amber-500/30 flex flex-col gap-2 relative overflow-hidden group">
+                    <!-- Subtle Animated Glowing Amber Border Sheen -->
+                    <div class="spotlight-border-glow"></div>
+
+                    <!-- Header with animated 3D-style bulb icon -->
+                    <div class="relative z-10 flex items-center gap-2">
+                        <!-- Small 3D-style bulb icon with continuous blinking or glowing animation -->
+                        <div class="relative w-7 h-7 flex items-center justify-center shrink-0">
+                            <svg class="w-6 h-6 spotlight-lamp-icon" viewBox="0 0 32 32" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <radialGradient id="spotlightBulbGrad" cx="50%" cy="40%" r="55%">
+                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+                                        <stop offset="40%" stop-color="#fef08a" stop-opacity="0.85" />
+                                        <stop offset="80%" stop-color="#f59e0b" stop-opacity="0.5" />
+                                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.2" />
+                                    </radialGradient>
+                                    <linearGradient id="spotlightBaseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#64748b" />
+                                        <stop offset="50%" stop-color="#cbd5e1" />
+                                        <stop offset="100%" stop-color="#475569" />
+                                    </linearGradient>
+                                    <radialGradient id="spotlightHaloGrad" cx="50%" cy="40%" r="60%">
+                                        <stop offset="0%" stop-color="#fef08a" stop-opacity="0.6" />
+                                        <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.2" />
+                                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0" />
+                                    </radialGradient>
+                                </defs>
+                                <!-- Soft Pulsing Glow Aura behind Bulb -->
+                                <circle cx="16" cy="12" r="13" fill="url(#spotlightHaloGrad)"
+                                    class="spotlight-lamp-halo" />
+                                <!-- Lamp Bulb Glass Body -->
+                                <path d="M12 21 C10 18 7 15 7 11 C7 6 11 2 16 2 C21 2 25 6 25 11 C25 15 22 18 20 21 Z"
+                                    fill="url(#spotlightBulbGrad)" stroke="rgba(255, 255, 255, 0.75)"
+                                    stroke-width="0.8" />
+                                <!-- Elegant Internal Filament with Smooth Light Blink -->
+                                <path d="M13.5 11 C14.5 7.5, 17.5 7.5, 18.5 11" stroke="#ffffff" stroke-width="1.2"
+                                    stroke-linecap="round" fill="none" class="spotlight-lamp-filament" />
+                                <!-- Filament Lead Wires -->
+                                <line x1="14" y1="11" x2="14.5" y2="20" stroke="#d97706" stroke-width="0.6" />
+                                <line x1="18" y1="11" x2="17.5" y2="20" stroke="#d97706" stroke-width="0.6" />
+                                <!-- Metal Screw Base Threads -->
+                                <path d="M12 21 Q16 22.5 20 21 L19.8 23.5 Q16 25 12.2 23.5 Z"
+                                    fill="url(#spotlightBaseGrad)" stroke="#334155" stroke-width="0.5" />
+                                <path d="M12.2 23.5 Q16 25 19.8 23.5 L19.5 26 Q16 27.5 12.5 26 Z"
+                                    fill="url(#spotlightBaseGrad)" stroke="#334155" stroke-width="0.5" />
+                                <path d="M13.2 26 Q16 27.5 18.8 26 L18.2 28.5 Q16 29.5 13.8 28.5 Z" fill="#181a20"
+                                    stroke="#0f172a" stroke-width="0.5" />
+                                <circle cx="16" cy="29" r="1.1" fill="#94a3b8" />
+                                <!-- Specular Highlight Sheen -->
+                                <path d="M10 8 C10.5 5 12.5 3.5 15 3.2" stroke="rgba(255, 255, 255, 0.9)"
+                                    stroke-width="0.75" stroke-linecap="round" fill="none" />
+                            </svg>
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xs font-bold text-white tracking-wide">Creator Spotlight</h3>
+                                <span
+                                    class="text-[9px] font-mono uppercase px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">3D</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tagline -->
+                    <p class="relative z-10 text-[10px] text-slate-300 italic leading-snug">
+                        Capture your creation. Share your story.
+                    </p>
+
+                    <!-- Open Creator Spotlight Button -->
+                    <button id="btn-creator-spotlight" onclick="openCreatorSpotlight()"
+                        class="spotlight-3d-submit-btn w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-white font-semibold text-xs transition"
+                        type="button" aria-label="Open Creator Spotlight">
+                        <i class="ph-bold ph-cube text-amber-300 text-xs"></i>
+                        <span>Open Creator Spotlight</span>
+                    </button>
+                </div>
             </div>
 
             <!-- FLOATING BOTTOM TOOLBAR: CAMERA, BED & SHADING MODES -->
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 glass-panel px-3 py-2 rounded-2xl shadow-2xl max-w-[95vw] overflow-x-auto">
+            <div
+                class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 glass-panel px-3 py-2 rounded-2xl shadow-2xl max-w-[95vw] overflow-x-auto">
                 <!-- Lighting Toggle -->
-                <button onclick="toggleBulb()" id="btn-bulb" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-medium flex items-center gap-1.5 hover:bg-amber-500/30 transition shrink-0">
+                <button onclick="toggleBulb()" id="btn-bulb"
+                    class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-medium flex items-center gap-1.5 hover:bg-amber-500/30 transition shrink-0">
                     <i class="ph-fill ph-lightbulb text-sm"></i>
                     <span>Bulb ON</span>
                 </button>
@@ -434,19 +605,24 @@
                 <div class="h-5 w-[1px] bg-white/10 mx-1 shrink-0"></div>
 
                 <!-- Shader Mode Buttons -->
-                <button onclick="setRenderMode('lit')" id="mode-lit" class="px-2.5 py-1.5 rounded-lg bg-white/10 text-white text-xs font-medium flex items-center gap-1.5 hover:bg-white/15 transition shrink-0">
+                <button onclick="setRenderMode('lit')" id="mode-lit"
+                    class="px-2.5 py-1.5 rounded-lg bg-white/10 text-white text-xs font-medium flex items-center gap-1.5 hover:bg-white/15 transition shrink-0">
                     <i class="ph-fill ph-sun-dim text-amber-400"></i>
                     <span>Translucency</span>
                 </button>
-                <button onclick="setRenderMode('overhang')" id="mode-overhang" class="px-2.5 py-1.5 rounded-lg text-slate-300 text-xs font-medium flex items-center gap-1.5 hover:bg-white/10 transition shrink-0" title="Visualize overhangs > 45 degrees in red">
+                <button onclick="setRenderMode('overhang')" id="mode-overhang"
+                    class="px-2.5 py-1.5 rounded-lg text-slate-300 text-xs font-medium flex items-center gap-1.5 hover:bg-white/10 transition shrink-0"
+                    title="Visualize overhangs > 45 degrees in red">
                     <i class="ph-bold ph-warning-diamond text-rose-400"></i>
                     <span>Overhang Check</span>
                 </button>
-                <button onclick="setRenderMode('normal')" id="mode-normal" class="px-2.5 py-1.5 rounded-lg text-slate-300 text-xs font-medium flex items-center gap-1.5 hover:bg-white/10 transition shrink-0">
+                <button onclick="setRenderMode('normal')" id="mode-normal"
+                    class="px-2.5 py-1.5 rounded-lg text-slate-300 text-xs font-medium flex items-center gap-1.5 hover:bg-white/10 transition shrink-0">
                     <i class="ph-bold ph-sphere text-indigo-400"></i>
                     <span>Normals</span>
                 </button>
-                <button onclick="toggleWireframe()" id="btn-wireframe" class="px-2.5 py-1.5 rounded-lg text-slate-300 text-xs font-medium flex items-center gap-1.5 hover:bg-white/10 transition shrink-0">
+                <button onclick="toggleWireframe()" id="btn-wireframe"
+                    class="px-2.5 py-1.5 rounded-lg text-slate-300 text-xs font-medium flex items-center gap-1.5 hover:bg-white/10 transition shrink-0">
                     <i class="ph-bold ph-polygon"></i>
                     <span>Wireframe</span>
                 </button>
@@ -456,7 +632,8 @@
                 <!-- Print Bed Selector -->
                 <div class="flex items-center gap-1 text-xs text-slate-300 shrink-0">
                     <i class="ph-bold ph-grid-four text-slate-400"></i>
-                    <select id="bed-size-select" onchange="updatePrintBed(this.value)" class="bg-transparent text-xs font-mono text-slate-200 outline-none cursor-pointer">
+                    <select id="bed-size-select" onchange="updatePrintBed(this.value)"
+                        class="bg-transparent text-xs font-mono text-slate-200 outline-none cursor-pointer">
                         <option value="256" class="bg-cad-panel">256×256 Bed (Bambu)</option>
                         <option value="220" class="bg-cad-panel">220×220 Bed (Ender)</option>
                         <option value="300" class="bg-cad-panel">300×300 Bed (Max)</option>
@@ -467,30 +644,37 @@
                 <div class="h-5 w-[1px] bg-white/10 mx-1 shrink-0"></div>
 
                 <!-- Camera Reset & Views -->
-                <button onclick="setCameraView('iso')" title="Isometric View" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs transition shrink-0">
+                <button onclick="setCameraView('iso')" title="Isometric View"
+                    class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs transition shrink-0">
                     <i class="ph-bold ph-cube-focus text-base"></i>
                 </button>
-                <button onclick="setCameraView('front')" title="Front Profile View" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs font-mono transition shrink-0">
+                <button onclick="setCameraView('front')" title="Front Profile View"
+                    class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs font-mono transition shrink-0">
                     FRT
                 </button>
-                <button onclick="setCameraView('top')" title="Top Fitter View" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs font-mono transition shrink-0">
+                <button onclick="setCameraView('top')" title="Top Fitter View"
+                    class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs font-mono transition shrink-0">
                     TOP
                 </button>
-                <button onclick="setCameraView('bottom')" title="Bottom Fitter View" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs font-mono transition shrink-0">
+                <button onclick="setCameraView('bottom')" title="Bottom Fitter View"
+                    class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 text-xs font-mono transition shrink-0">
                     BTM
                 </button>
             </div>
         </main>
 
         <!-- RIGHT SIDEBAR: PARAMETRIC CAD CONTROLS -->
-        <aside class="w-80 sm:w-96 bg-cad-panel border-l border-cad-border flex flex-col h-full z-20 shrink-0 select-none">
+        <aside
+            class="w-80 sm:w-96 bg-cad-panel border-l border-cad-border flex flex-col h-full z-20 shrink-0 select-none">
             <!-- Section Tabs / Header -->
             <div class="px-4 py-3 border-b border-cad-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <i class="ph-bold ph-sliders-horizontal text-amber-400"></i>
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-200">Parametric Controls</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-200">Parametric
+                        Controls</span>
                 </div>
-                <button onclick="resetToDefault()" class="text-[11px] text-slate-400 hover:text-amber-400 flex items-center gap-1 transition">
+                <button onclick="resetToDefault()"
+                    class="text-[11px] text-slate-400 hover:text-amber-400 flex items-center gap-1 transition">
                     <i class="ph-bold ph-arrow-counter-clockwise"></i> Reset
                 </button>
             </div>
@@ -500,7 +684,8 @@
 
                 <!-- 1. OVERALL DIMENSIONS -->
                 <div class="p-4">
-                    <button onclick="toggleSection('sec-dims')" class="w-full flex items-center justify-between text-left mb-3">
+                    <button onclick="toggleSection('sec-dims')"
+                        class="w-full flex items-center justify-between text-left mb-3">
                         <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
                             <i class="ph-bold ph-ruler"></i> 1. Primary Dimensions
                         </span>
@@ -520,7 +705,8 @@
                         <!-- Bottom Radius -->
                         <div>
                             <div class="flex justify-between text-xs mb-1">
-                                <span class="text-slate-300">Bottom Radius (<span id="val-bottomDia" class="text-slate-400">Ø150</span>)</span>
+                                <span class="text-slate-300">Bottom Radius (<span id="val-bottomDia"
+                                        class="text-slate-400">Ø150</span>)</span>
                                 <span id="val-bottomRadius" class="font-mono text-amber-400">75 mm</span>
                             </div>
                             <input type="range" id="param-bottomRadius" min="25" max="140" step="1" value="75">
@@ -529,7 +715,8 @@
                         <!-- Top Radius -->
                         <div>
                             <div class="flex justify-between text-xs mb-1">
-                                <span class="text-slate-300">Top Radius (<span id="val-topDia" class="text-slate-400">Ø110</span>)</span>
+                                <span class="text-slate-300">Top Radius (<span id="val-topDia"
+                                        class="text-slate-400">Ø110</span>)</span>
                                 <span id="val-topRadius" class="font-mono text-amber-400">55 mm</span>
                             </div>
                             <input type="range" id="param-topRadius" min="20" max="140" step="1" value="55">
@@ -552,7 +739,8 @@
 
                 <!-- 2. SILHOUETTE / PROFILE CURVE -->
                 <div class="p-4">
-                    <button onclick="toggleSection('sec-profile')" class="w-full flex items-center justify-between text-left mb-3">
+                    <button onclick="toggleSection('sec-profile')"
+                        class="w-full flex items-center justify-between text-left mb-3">
                         <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
                             <i class="ph-bold ph-bezier-curve"></i> 2. Silhouette Curve
                         </span>
@@ -563,7 +751,8 @@
                         <!-- Profile Shape Selector -->
                         <div>
                             <label class="block text-xs text-slate-300 mb-1.5">Vertical Contour Shape</label>
-                            <select id="param-profileType" class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
+                            <select id="param-profileType"
+                                class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
                                 <option value="bulbous">Bulbous / Organic Sphere</option>
                                 <option value="conical">Straight / Conical Taper</option>
                                 <option value="bell">Classic Curved Bell</option>
@@ -595,7 +784,8 @@
 
                 <!-- 3. PROCEDURAL SURFACE PATTERN & RIBS -->
                 <div class="p-4">
-                    <button onclick="toggleSection('sec-pattern')" class="w-full flex items-center justify-between text-left mb-3">
+                    <button onclick="toggleSection('sec-pattern')"
+                        class="w-full flex items-center justify-between text-left mb-3">
                         <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
                             <i class="ph-bold ph-waves"></i> 3. Surface Ribs & Pattern
                         </span>
@@ -606,7 +796,8 @@
                         <!-- Pattern Type -->
                         <div>
                             <label class="block text-xs text-slate-300 mb-1.5">Surface Modulation Mode</label>
-                            <select id="param-patternType" class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
+                            <select id="param-patternType"
+                                class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
                                 <option value="spiral_ribs">Spiral Flutes / Twisted Ribs</option>
                                 <option value="origami">Origami Sharp Pleats</option>
                                 <option value="diamond">Diamond Knurled Lattice</option>
@@ -674,7 +865,8 @@
 
                 <!-- 4. LAMP SOCKET FITTER / MOUNTING RING -->
                 <div class="p-4">
-                    <button onclick="toggleSection('sec-fitter')" class="w-full flex items-center justify-between text-left mb-3">
+                    <button onclick="toggleSection('sec-fitter')"
+                        class="w-full flex items-center justify-between text-left mb-3">
                         <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
                             <i class="ph-bold ph-gear-six"></i> 4. Lamp Socket Fitter Ring
                         </span>
@@ -685,7 +877,8 @@
                         <!-- Mount Type -->
                         <div>
                             <label class="block text-xs text-slate-300 mb-1.5">Fitter Position</label>
-                            <select id="param-mountPosition" class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
+                            <select id="param-mountPosition"
+                                class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
                                 <option value="bottom">Bottom Spider Mount (Table Lamp)</option>
                                 <option value="top">Top Spider Mount (Pendant Light)</option>
                                 <option value="solid_base">Solid Base Disc (LED Puck / Vase)</option>
@@ -697,7 +890,8 @@
                         <div id="fitter-details-group" class="space-y-3.5">
                             <div>
                                 <label class="block text-xs text-slate-300 mb-1.5">Socket Standard Preset</label>
-                                <select id="param-socketPreset" onchange="applySocketStandard(this.value)" class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
+                                <select id="param-socketPreset" onchange="applySocketStandard(this.value)"
+                                    class="w-full bg-cad-bg border border-cad-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-amber-500">
                                     <option value="41">E26 / E27 Standard Ring (Ø41.0mm)</option>
                                     <option value="28.5">E14 European Small (Ø28.5mm)</option>
                                     <option value="38">IKEA HEMMA / Strala Cord (Ø38.0mm)</option>
@@ -765,7 +959,8 @@
 
                 <!-- 5. MESH RESOLUTION -->
                 <div class="p-4">
-                    <button onclick="toggleSection('sec-res')" class="w-full flex items-center justify-between text-left mb-3">
+                    <button onclick="toggleSection('sec-res')"
+                        class="w-full flex items-center justify-between text-left mb-3">
                         <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
                             <i class="ph-bold ph-polygon"></i> 5. Mesh Resolution & Slicing
                         </span>
@@ -789,9 +984,12 @@
                             <input type="range" id="param-heightSegs" min="30" max="220" step="10" value="120">
                         </div>
 
-                        <div class="p-2.5 rounded-lg bg-cad-bg border border-cad-border text-[11px] text-slate-400 leading-relaxed">
-                            <strong class="text-slate-200 block mb-0.5"><i class="ph-fill ph-info text-amber-400"></i> Slicer Tip:</strong>
-                            Use <span class="text-amber-300 font-mono">LED bulbs only</span> (max 12W) with PLA/PETG prints to prevent thermal deformation. Exported STL is 1:1 millimeter scale.
+                        <div
+                            class="p-2.5 rounded-lg bg-cad-bg border border-cad-border text-[11px] text-slate-400 leading-relaxed">
+                            <strong class="text-slate-200 block mb-0.5"><i class="ph-fill ph-info text-amber-400"></i>
+                                Slicer Tip:</strong>
+                            Use <span class="text-amber-300 font-mono">LED bulbs only</span> (max 12W) with PLA/PETG
+                            prints to prevent thermal deformation. Exported STL is 1:1 millimeter scale.
                         </div>
                     </div>
                 </div>
@@ -801,16 +999,345 @@
     </div>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-16 right-6 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-300">
+    <div id="toast"
+        class="fixed bottom-16 right-6 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-300">
         <div class="glass-panel px-4 py-3 rounded-xl shadow-2xl border border-amber-500/40 flex items-center gap-3">
             <i class="ph-fill ph-check-circle text-amber-400 text-xl"></i>
             <div>
                 <div id="toast-title" class="text-xs font-bold text-white">STL Exported Ready for Slicing</div>
-                <div id="toast-msg" class="text-[11px] text-slate-300">Watertight binary mesh saved in millimeters.</div>
+                <div id="toast-msg" class="text-[11px] text-slate-300">Watertight binary mesh saved in millimeters.
+                </div>
             </div>
         </div>
     </div>
+    <!-- ================================================================= -->
+    <!-- CREATOR SPOTLIGHT MODAL OVERLAY                                    -->
+    <!-- ================================================================= -->
+    <div id="creator-spotlight-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/75 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300"
+        role="dialog" aria-modal="true" aria-labelledby="spotlight-modal-title">
+        <div
+            class="relative w-full max-w-2xl max-h-[92vh] flex flex-col glass-panel rounded-2xl border border-amber-500/35 shadow-2xl overflow-hidden spotlight-modal-surface">
+            <!-- Modal Header -->
+            <div class="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-cad-panel/90">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                        <i class="ph-fill ph-lightbulb text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 id="spotlight-modal-title"
+                                class="font-bold text-sm sm:text-base text-white tracking-tight">Creator Spotlight</h2>
+                            <span
+                                class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">LuminaCAD</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 italic">Capture your creation. Share your story.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleSpotlightGalleryView()" id="btn-toggle-gallery-view" type="button"
+                        class="text-xs px-2.5 py-1 rounded-lg bg-cad-bg hover:bg-cad-hover border border-cad-border text-slate-300 flex items-center gap-1.5 transition"
+                        title="View previously saved creations">
+                        <i class="ph-bold ph-cards text-amber-400"></i>
+                        <span class="hidden sm:inline">Gallery</span>
+                        <span id="spotlight-saved-count"
+                            class="text-[10px] font-mono px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">0</span>
+                    </button>
+                    <button onclick="closeCreatorSpotlight()" type="button"
+                        class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition border border-white/10"
+                        aria-label="Close Spotlight Modal">
+                        <i class="ph-bold ph-x text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-spotlight-scroll">
+
+                <!-- 1. REAL INTERACTIVE 3D LAMP VIEWPORT (Always Interactive) -->
+                <div
+                    class="rounded-xl border border-amber-500/35 bg-gradient-to-b from-[#0c0d12] to-[#07080a] p-2.5 sm:p-3 shadow-2xl relative">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                            <i class="ph-fill ph-cube text-amber-400"></i> Interactive 3D Lamp Viewport
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <span id="spotlight-capture-status"
+                                class="text-[10px] font-mono text-emerald-400 flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/25 px-1.5 py-0.5 rounded">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live 3D
+                                Model
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 3D Canvas Viewport Container -->
+                    <div class="relative w-full h-64 sm:h-72 rounded-lg overflow-hidden bg-[#090a0d] border border-white/10 group select-none"
+                        id="spotlight-canvas-container">
+                        <!-- Dedicated Three.js canvas for Creator Spotlight -->
+                        <canvas id="spotlight-three-canvas"
+                            class="w-full h-full block outline-none cursor-grab active:cursor-grabbing"
+                            style="touch-action: none;"></canvas>
+
+                        <!-- Interaction hint badge (Top-Left) -->
+                        <div
+                            class="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 px-2 py-1 rounded bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono text-slate-300 pointer-events-none">
+                            <i class="ph-bold ph-hand-pointing text-amber-400"></i>
+                            <span class="hidden sm:inline">Rotate 360° • Scroll Zoom • Inspect Inside & Out</span>
+                            <span class="sm:hidden">Drag to Rotate • Pinch Zoom</span>
+                        </div>
+
+                        <!-- Reset View Button (Top-Right) -->
+                        <div class="absolute top-2.5 right-2.5 z-10">
+                            <button type="button" onclick="resetSpotlightCamera()" id="btn-reset-spotlight-cam"
+                                class="px-2 py-1 rounded-md bg-cad-bg/90 hover:bg-cad-hover border border-cad-border text-slate-200 hover:text-white text-[10px] font-mono flex items-center gap-1 shadow-lg transition active:scale-95"
+                                title="Reset camera to initial viewpoint">
+                                <i class="ph-bold ph-arrow-counter-clockwise text-amber-400"></i>
+                                <span>Reset View</span>
+                            </button>
+                        </div>
+
+                        <!-- Model Specs Tag (Bottom-Left) -->
+                        <div class="absolute bottom-2.5 left-2.5 z-10 pointer-events-none">
+                            <span id="spotlight-live-specs-badge"
+                                class="px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-[10px] font-mono text-amber-300 border border-amber-500/30">
+                                3D Parametric Lamp
+                            </span>
+                        </div>
+
+                        <!-- Camera Flash Effect (Triggered on Capture My Lamp) -->
+                        <div id="spotlight-camera-flash"
+                            class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-200 z-20">
+                        </div>
+                    </div>
+
+                    <!-- Capture / Sync Action Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 mt-2 pt-2 border-t border-white/5">
+                        <div class="text-[11px] text-slate-400 flex items-center gap-1">
+                            <i class="ph-fill ph-check-circle text-amber-400 text-xs"></i>
+                            <span>Rotate, zoom, and inspect your 3D model freely.</span>
+                        </div>
+
+                        <button id="btn-capture-lamp" onclick="captureLampFromStudio()" type="button"
+                            class="spotlight-capture-btn group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white shadow-lg transition">
+                            <i id="icon-capture-camera"
+                                class="ph-bold ph-camera text-amber-400 text-sm group-hover:scale-110 transition-transform"></i>
+                            <span id="text-capture-button">Capture My Lamp</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. CREATOR NAME & REVIEW FORM (Before Submission) -->
+                <div id="spotlight-create-view" class="space-y-3.5">
+                    <!-- Creator Name -->
+                    <div>
+                        <label for="spotlight-creator-name"
+                            class="block text-xs font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                            <span>Creator Name <span class="text-amber-400">*</span></span>
+                            <span class="text-[10px] text-slate-500 font-normal">How your name appears on your spotlight
+                                card</span>
+                        </label>
+                        <input type="text" id="spotlight-creator-name" maxlength="50"
+                            placeholder="e.g. Elena Rostova or @lumina_maker"
+                            class="w-full bg-cad-bg rounded-lg px-3 py-2 text-xs text-white border border-cad-border focus:border-amber-500 focus:outline-none transition shadow-inner">
+                    </div>
+
+                    <!-- Star Rating (1 - 5) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-semibold text-slate-300">Rate LuminaCAD <span
+                                    class="text-slate-500 font-normal text-[10px]">(Optional)</span></span>
+                            <span id="spotlight-rating-text" class="text-[11px] font-mono text-amber-400">Select
+                                rating</span>
+                        </div>
+                        <div class="flex items-center gap-1.5" id="spotlight-star-container">
+                            <button type="button" onclick="setSpotlightRating(1)"
+                                onmouseenter="previewSpotlightRating(1)" onmouseleave="previewSpotlightRating(0)"
+                                class="spotlight-star-btn text-lg text-slate-600 hover:text-amber-400 transition"
+                                data-star="1" title="1 Star — Needs Improvement"><i
+                                    class="ph-fill ph-star"></i></button>
+                            <button type="button" onclick="setSpotlightRating(2)"
+                                onmouseenter="previewSpotlightRating(2)" onmouseleave="previewSpotlightRating(0)"
+                                class="spotlight-star-btn text-lg text-slate-600 hover:text-amber-400 transition"
+                                data-star="2" title="2 Stars — Fair"><i class="ph-fill ph-star"></i></button>
+                            <button type="button" onclick="setSpotlightRating(3)"
+                                onmouseenter="previewSpotlightRating(3)" onmouseleave="previewSpotlightRating(0)"
+                                class="spotlight-star-btn text-lg text-slate-600 hover:text-amber-400 transition"
+                                data-star="3" title="3 Stars — Good CAD Tool"><i class="ph-fill ph-star"></i></button>
+                            <button type="button" onclick="setSpotlightRating(4)"
+                                onmouseenter="previewSpotlightRating(4)" onmouseleave="previewSpotlightRating(0)"
+                                class="spotlight-star-btn text-lg text-slate-600 hover:text-amber-400 transition"
+                                data-star="4" title="4 Stars — Very Impressive"><i class="ph-fill ph-star"></i></button>
+                            <button type="button" onclick="setSpotlightRating(5)"
+                                onmouseenter="previewSpotlightRating(5)" onmouseleave="previewSpotlightRating(0)"
+                                class="spotlight-star-btn text-lg text-slate-600 hover:text-amber-400 transition"
+                                data-star="5" title="5 Stars — Masterpiece Studio!"><i
+                                    class="ph-fill ph-star"></i></button>
+                            <button type="button" onclick="clearSpotlightRating()" id="btn-clear-rating"
+                                class="text-[10px] text-slate-500 hover:text-slate-300 ml-2 transition hidden underline">Clear</button>
+                        </div>
+                    </div>
+
+                    <!-- Written Review -->
+                    <div>
+                        <label for="spotlight-review-text"
+                            class="block text-xs font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                            <span>Your Review <span class="text-amber-400">*</span></span>
+                            <span class="text-[10px] text-slate-500 font-normal">Feedback about LuminaCAD or your lamp
+                                story</span>
+                        </label>
+                        <textarea id="spotlight-review-text" rows="3" maxlength="600"
+                            oninput="updateSpotlightCharCount()"
+                            placeholder="Describe your lamp design, intended 3D print material, or what you enjoyed about designing with LuminaCAD..."
+                            class="w-full bg-cad-bg rounded-lg p-2.5 text-xs text-white border border-cad-border focus:border-amber-500 focus:outline-none transition shadow-inner leading-relaxed resize-none"></textarea>
+                        <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                            <span id="spotlight-form-error" class="text-rose-400 font-medium"></span>
+                            <span id="spotlight-char-count">0 / 600</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Review Button -->
+                    <div class="pt-1">
+                        <button id="btn-submit-spotlight" onclick="submitCreatorSpotlight()" type="button"
+                            class="spotlight-3d-submit-btn w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-white font-bold text-xs uppercase tracking-wider transition group">
+                            <i
+                                class="ph-fill ph-sparkle text-amber-300 text-sm group-hover:rotate-12 transition-transform"></i>
+                            <span>Submit Review to Creator Spotlight</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. RESULT VIEW (After Submission - 3D LAMP REMAINS LIVE & INTERACTIVE ABOVE!) -->
+                <div id="spotlight-result-view" class="hidden space-y-3.5">
+                    <!-- Congratulatory Badge -->
+                    <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-2.5">
+                        <div
+                            class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="ph-fill ph-check-circle text-base"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-xs font-bold text-white flex items-center gap-2">
+                                <span>Spotlight Review Submitted!</span>
+                                <span
+                                    class="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-amber-500/25 text-amber-300 border border-amber-500/40">Live
+                                    3D Model</span>
+                            </div>
+                            <div class="text-[11px] text-slate-300 mt-0.5 leading-snug">
+                                Your lamp design is live in 3D above. You can continue rotating, zooming, and inspecting
+                                it at any time.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Creator Card Details -->
+                    <div id="spotlight-single-card-container"></div>
+
+                    <!-- Local Storage Notice -->
+                    <div
+                        class="p-2 rounded-lg bg-slate-900/60 border border-slate-700/50 text-[10px] text-slate-400 flex items-start gap-2">
+                        <i class="ph-fill ph-shield-check text-emerald-400 text-xs shrink-0 mt-0.5"></i>
+                        <span class="leading-relaxed">
+                            <strong class="text-slate-300">Local Storage:</strong> Saved safely to your device's browser
+                            cache. It is not publicly published to an external cloud database.
+                        </span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10">
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="downloadCurrentSpotlightCard()"
+                                class="px-3 py-1.5 rounded-lg bg-cad-bg hover:bg-cad-hover border border-cad-border text-xs font-medium text-slate-200 flex items-center gap-1.5 transition">
+                                <i class="ph-bold ph-download-simple text-amber-400"></i>
+                                <span>Download PNG</span>
+                            </button>
+                            <button type="button" onclick="editCurrentSpotlightReview()"
+                                class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-medium text-slate-300 flex items-center gap-1.5 transition">
+                                <i class="ph-bold ph-pencil-simple text-slate-400"></i>
+                                <span>Edit Review</span>
+                            </button>
+                            <button type="button" id="btn-delete-current-review" onclick="confirmDeleteCurrentFeedback()"
+                                class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-medium flex items-center gap-1.5 transition"
+                                title="Delete this review from storage">
+                                <i class="ph-bold ph-trash text-rose-400"></i>
+                                <span>Delete Review</span>
+                            </button>
+                        </div>
+                        <button type="button" onclick="closeCreatorSpotlight()"
+                            class="px-4 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition">
+                            Back to 3D Designer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. SAVED SPOTLIGHT GALLERY VIEW -->
+                <div id="spotlight-gallery-view" class="hidden space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                            <i class="ph-fill ph-cards text-amber-400"></i> Saved Creator Spotlights
+                        </span>
+                        <button type="button" onclick="showCreateNewSpotlight()"
+                            class="text-xs px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold hover:bg-amber-500/30 transition flex items-center gap-1">
+                            <i class="ph-bold ph-plus"></i> New Spotlight
+                        </button>
+                    </div>
+
+                    <div id="spotlight-gallery-list" class="space-y-4">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. CREATOR SPOTLIGHT DELETE CONFIRMATION MODAL -->
+    <div id="spotlight-delete-modal"
+        class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-200"
+        role="dialog" aria-modal="true" aria-labelledby="delete-dialog-title">
+        <div class="relative w-full max-w-sm rounded-2xl bg-gradient-to-b from-[#181a24] to-[#0f1118] border border-rose-500/30 p-5 shadow-2xl text-left">
+            <!-- Close (X) button -->
+            <button type="button" onclick="cancelDeleteSpotlight()"
+                class="absolute top-3.5 right-3.5 w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition"
+                aria-label="Cancel deletion">
+                <i class="ph-bold ph-x text-sm"></i>
+            </button>
+
+            <!-- Icon & Header -->
+            <div class="flex items-start gap-3 mb-3">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center shrink-0">
+                    <i class="ph-fill ph-trash text-lg"></i>
+                </div>
+                <div class="pr-6">
+                    <h3 id="delete-dialog-title" class="text-sm font-bold text-white tracking-tight">Confirm Deletion</h3>
+                    <span class="text-[10px] font-mono text-slate-400 flex items-center gap-1 mt-0.5">
+                        <i class="ph-bold ph-shield-warning text-amber-400"></i> Local Storage Record
+                    </span>
+                </div>
+            </div>
+
+            <!-- Dynamic Message -->
+            <p id="spotlight-delete-message" class="text-xs text-slate-300 leading-relaxed mb-4">
+                Are you sure you want to delete this creator entry?
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+                <button type="button" id="btn-cancel-delete" onclick="cancelDeleteSpotlight()"
+                    class="px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold transition">
+                    Cancel
+                </button>
+                <button type="button" id="btn-confirm-delete" onclick="executeDeleteSpotlight()"
+                    class="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-rose-900/30 transition">
+                    <i class="ph-bold ph-trash text-xs"></i>
+                    <span>Confirm Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- APPLICATION SCRIPT -->
-    <script src="script.js?v=2.4"></script>
+    <script src="script.js?v=3.3"></script>
 </body>
+
 </html>

@@ -843,7 +843,10 @@ input[type="range"]::-moz-range-thumb {
     .bulb-ambient-aura,
     .lamp-btn-multicolor-aura,
     .lamp-icon-bulb-halo,
-    .lamp-icon-filament {
+    .lamp-icon-filament,
+    .spotlight-lamp-filament,
+    .spotlight-lamp-halo,
+    .spotlight-border-glow {
         animation: none !important;
         opacity: 1 !important;
         filter: none !important;
@@ -852,5 +855,272 @@ input[type="range"]::-moz-range-thumb {
 
     #lumina-intro {
         transition: none !important;
+    }
+}
+
+/* ==========================================================================
+   CREATOR SPOTLIGHT 3D BUTTON & MODAL STYLES
+   ========================================================================== */
+
+/* 3D-Style Creator Spotlight Button */
+.creator-spotlight-btn {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, rgba(28, 31, 39, 0.95) 0%, rgba(16, 18, 23, 0.98) 100%);
+    border: 1.5px solid rgba(245, 158, 11, 0.35);
+    border-radius: 14px;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease,
+                background 0.25s ease;
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.55),
+        0 0 14px rgba(245, 158, 11, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.creator-spotlight-btn:hover {
+    transform: translateY(-2px);
+    border-color: rgba(245, 158, 11, 0.7);
+    background: linear-gradient(135deg, rgba(34, 38, 48, 0.98) 0%, rgba(20, 23, 30, 0.98) 100%);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.65),
+        0 0 25px rgba(245, 158, 11, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.creator-spotlight-btn:active {
+    transform: translateY(1px);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.7),
+        0 0 10px rgba(245, 158, 11, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.creator-spotlight-btn:focus-visible {
+    outline: 2px solid #f59e0b;
+    outline-offset: 3px;
+}
+
+/* Subtle Animated Glowing Amber Border Sheen */
+.spotlight-border-glow {
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 14px;
+    background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.45), transparent 70%);
+    opacity: 0.4;
+    filter: blur(4px);
+    pointer-events-none;
+    z-index: 0;
+    animation: spotlightBorderBreathe 4s ease-in-out infinite;
+    transition: opacity 0.3s ease;
+}
+
+.creator-spotlight-btn:hover .spotlight-border-glow {
+    opacity: 0.85;
+    filter: blur(6px);
+}
+
+@keyframes spotlightBorderBreathe {
+    0%, 100% {
+        opacity: 0.35;
+        transform: scale(0.98);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.02);
+    }
+}
+
+/* Realistic Lamp Bulb Icon in Creator Spotlight Button */
+.spotlight-lamp-icon {
+    filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.4));
+    transition: transform 0.3s ease;
+}
+
+.creator-spotlight-btn:hover .spotlight-lamp-icon {
+    transform: scale(1.08);
+}
+
+/* Continuously Smooth Blinking / Soft Glowing Filament */
+.spotlight-lamp-filament {
+    animation: spotlightFilamentBlink 3.2s ease-in-out infinite;
+}
+
+@keyframes spotlightFilamentBlink {
+    0%, 100% {
+        opacity: 0.75;
+        stroke: #fef08a;
+        filter: drop-shadow(0 0 2px #f59e0b);
+    }
+    45%, 55% {
+        opacity: 1;
+        stroke: #ffffff;
+        filter: drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 10px #f59e0b);
+    }
+}
+
+/* Soft Pulsing Bulb Halo */
+.spotlight-lamp-halo {
+    animation: spotlightHaloPulse 3.2s ease-in-out infinite;
+    transform-origin: 16px 12px;
+}
+
+@keyframes spotlightHaloPulse {
+    0%, 100% {
+        opacity: 0.35;
+        transform: scale(0.92);
+    }
+    50% {
+        opacity: 0.85;
+        transform: scale(1.12);
+    }
+}
+
+/* 3D-Style Submit Button */
+.spotlight-3d-submit-btn {
+    position: relative;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: 1px solid rgba(254, 240, 138, 0.4);
+    box-shadow:
+        0 4px 16px rgba(245, 158, 11, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spotlight-3d-submit-btn:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #ea580c 100%);
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 24px rgba(245, 158, 11, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.spotlight-3d-submit-btn:active {
+    transform: translateY(1px);
+    box-shadow:
+        0 2px 6px rgba(245, 158, 11, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* Capture Action Button */
+.spotlight-capture-btn {
+    background: linear-gradient(135deg, rgba(38, 43, 54, 0.95), rgba(24, 27, 34, 0.98));
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    cursor: pointer;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.spotlight-capture-btn:hover {
+    background: linear-gradient(135deg, rgba(48, 54, 68, 0.95), rgba(30, 34, 43, 0.98));
+    border-color: rgba(245, 158, 11, 0.6);
+    transform: translateY(-1px);
+    box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.5),
+        0 0 12px rgba(245, 158, 11, 0.2);
+}
+
+.spotlight-capture-btn:active {
+    transform: translateY(1px);
+}
+
+/* Spotlight Star Rating Interactive Styles */
+.spotlight-star-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.15s ease, color 0.15s ease, filter 0.15s ease;
+}
+
+.spotlight-star-btn:hover {
+    transform: scale(1.25);
+}
+
+.spotlight-star-btn.active,
+.spotlight-star-btn.hover-active {
+    color: #fbbf24 !important;
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.65));
+}
+
+/* Custom Scrollbar for Modal */
+.custom-spotlight-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-spotlight-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+.custom-spotlight-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+.custom-spotlight-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 158, 11, 0.4);
+}
+
+/* Creator Spotlight Interactive 3D Viewport Canvas */
+#spotlight-canvas-container {
+    touch-action: none;
+    user-select: none;
+}
+
+#spotlight-three-canvas {
+    touch-action: none;
+    outline: none;
+    cursor: grab;
+}
+
+#spotlight-three-canvas:active {
+    cursor: grabbing;
+}
+
+#btn-reset-spotlight-cam {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Responsive Handling on Mobile Devices */
+@media (max-width: 639px) {
+    #telemetry-container {
+        max-width: calc(50vw - 1rem);
+    }
+
+    #bulb-filament-container {
+        display: flex !important;
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: auto;
+        max-width: calc(50vw - 1rem);
+        z-index: 30;
+    }
+
+    #bulb-filament-container .glass-panel {
+        width: 100%;
+        max-width: 230px;
+    }
+
+    .creator-spotlight-btn {
+        width: 100%;
+        max-width: 230px;
+        padding: 8px 12px;
     }
 }

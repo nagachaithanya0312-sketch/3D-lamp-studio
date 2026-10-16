@@ -2859,10 +2859,1068 @@ window.playIntroAgain = playIntroAgain;
 window.toggleIntroAudio = toggleIntroAudio;
 window.resetColorRing = resetColorRing;
 
+/***********************************************************************
+ * 10. CREATOR SPOTLIGHT INTERACTIVE 3D ENGINE & COMPONENT
+ ***********************************************************************/
+const SPOTLIGHT_STORAGE_KEY = 'luminacad_creator_spotlights';
+let currentSpotlightImage = null;
+let currentSpotlightRating = 0;
+let isSpotlightLivePreviewOpen = false;
+let currentSubmissionId = null;
+let pendingDeleteTarget = null;
+
+// Dedicated Spotlight Three.js Sub-system
+let spotlightScene = null;
+let spotlightCamera = null;
+let spotlightRenderer = null;
+let spotlightControls = null;
+let spotlightAnimId = null;
+let isSpotlightOpen = false;
+
+// 3D Scene Components
+let spotlightLampGroup = null;
+let spotlightShadeMesh = null;
+let spotlightFitterMesh = null;
+let spotlightPointLight = null;
+let spotlightAmbientLight = null;
+let spotlightDirLight = null;
+let spotlightFillLight = null;
+
+// Initial camera framing anchors
+const spotlightInitialCamPos = new THREE.Vector3(260, 180, 260);
+const spotlightInitialTarget = new THREE.Vector3(0, 100, 0);
+
+function escapeSpotlightHTML(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function getCurrentDesignSpecs() {
+    let presetName = 'Custom Model';
+    if (params.patternType === 'spiral_ribs') presetName = 'Nordic Spiral';
+    else if (params.patternType === 'origami') presetName = 'Origami Lotus';
+    else if (params.patternType === 'vertical_ribs') presetName = 'Mid-Century Ribbed';
+    else if (params.patternType === 'diamond') presetName = 'Diamond Lattice';
+    else if (params.patternType === 'ripples') presetName = 'Minimalist Bell';
+    else if (params.patternType === 'faceted') presetName = 'Cyber Faceted';
+
+    const kLabel = renderState.bulbKelvin ? `${renderState.bulbKelvin}K` : '2700K';
+    return `${presetName} • ${params.height || 200}mm • ${kLabel}`;
+}
+
+function getStoredSpotlights() {
+    try {
+        const raw = localStorage.getItem(SPOTLIGHT_STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+        console.warn('Could not read saved creator spotlights:', e);
+        return [];
+    }
+}
+
+function saveSpotlightToStorage(item) {
+    try {
+        const list = getStoredSpotlights();
+        list.unshift(item);
+        if (list.length > 25) list.length = 25;
+        localStorage.setItem(SPOTLIGHT_STORAGE_KEY, JSON.stringify(list));
+        return true;
+    } catch (e) {
+        console.warn('Could not save creator spotlight:', e);
+        return false;
+    }
+}
+
+function updateSpotlightGalleryBadge() {
+    const badge = document.getElementById('spotlight-saved-count');
+    if (!badge) return;
+    const list = getStoredSpotlights();
+    badge.textContent = list.length;
+}
+
+/**
+ * Initialize Dedicated Three.js Scene for Creator Spotlight
+ */
+function initSpotlight3DScene() {
+    if (spotlightRenderer) return; // already initialized
+
+    const canvas = document.getElementById('spotlight-three-canvas');
+    const container = document.getElementById('spotlight-canvas-container');
+    if (!canvas || !container) return;
+
+    const width = container.clientWidth || 500;
+    const height = container.clientHeight || 280;
+
+    // 1. Scene
+    spotlightScene = new THREE.Scene();
+    spotlightScene.background = new THREE.Color(0x090a0e);
+
+    // 2. Camera
+    spotlightCamera = new THREE.PerspectiveCamera(40, width / height, 1, 3000);
+    spotlightCamera.position.copy(spotlightInitialCamPos);
+
+    // 3. Renderer with high-performance WebGL settings
+    spotlightRenderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        powerPreference: 'high-performance',
+        preserveDrawingBuffer: true
+    });
+    spotlightRenderer.setSize(width, height);
+    spotlightRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    spotlightRenderer.shadowMap.enabled = true;
+    spotlightRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    spotlightRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+    spotlightRenderer.toneMappingExposure = 1.15;
+
+    // 4. Smooth OrbitControls (360° inspection, zoom, pan, mobile gestures)
+    spotlightControls = new THREE.OrbitControls(spotlightCamera, spotlightRenderer.domElement);
+    spotlightControls.enableDamping = true;
+    spotlightControls.dampingFactor = 0.08;
+    spotlightControls.enableZoom = true;
+    spotlightControls.enableRotate = true;
+    spotlightControls.enablePan = true;
+    spotlightControls.minDistance = 35;
+    spotlightControls.maxDistance = 1400;
+    spotlightControls.target.copy(spotlightInitialTarget);
+
+    // 5. Lighting Setup tailored for inspecting interior & exterior geometry
+    spotlightAmbientLight = new THREE.AmbientLight(0xdbeafe, 0.45);
+    spotlightScene.add(spotlightAmbientLight);
+
+    spotlightDirLight = new THREE.DirectionalLight(0xffffff, 0.75);
+    spotlightDirLight.position.set(220, 380, 240);
+    spotlightDirLight.castShadow = true;
+    spotlightDirLight.shadow.mapSize.width = 1024;
+    spotlightDirLight.shadow.mapSize.height = 1024;
+    spotlightScene.add(spotlightDirLight);
+
+    spotlightFillLight = new THREE.DirectionalLight(0x93c5fd, 0.38);
+    spotlightFillLight.position.set(-220, 160, -200);
+    spotlightScene.add(spotlightFillLight);
+
+    spotlightPointLight = new THREE.PointLight(0xffb454, 2.4, 750, 1.4);
+    spotlightPointLight.position.set(0, 100, 0);
+    spotlightScene.add(spotlightPointLight);
+
+    // 6. Lamp Mesh Group
+    spotlightLampGroup = new THREE.Group();
+    spotlightScene.add(spotlightLampGroup);
+
+    // 7. Auto-resize with ResizeObserver
+    if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => {
+            if (isSpotlightOpen) onSpotlightResize();
+        });
+        ro.observe(container);
+    }
+}
+
+function onSpotlightResize() {
+    const container = document.getElementById('spotlight-canvas-container');
+    if (!container || !spotlightRenderer || !spotlightCamera) return;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    if (width === 0 || height === 0) return;
+
+    spotlightCamera.aspect = width / height;
+    spotlightCamera.updateProjectionMatrix();
+    spotlightRenderer.setSize(width, height);
+}
+
+function animateSpotlight() {
+    if (!isSpotlightOpen) return;
+    spotlightAnimId = requestAnimationFrame(animateSpotlight);
+
+    if (spotlightControls) spotlightControls.update();
+    if (spotlightRenderer && spotlightScene && spotlightCamera) {
+        spotlightRenderer.render(spotlightScene, spotlightCamera);
+    }
+}
+
+/**
+ * Capture & Sync the User's Actual 3D Lamp into Creator Spotlight
+ */
+function syncLampToSpotlight3D() {
+    if (!spotlightScene || !spotlightLampGroup) return;
+
+    // Clear previous spotlight lamp children cleanly
+    while (spotlightLampGroup.children.length > 0) {
+        const child = spotlightLampGroup.children[0];
+        spotlightLampGroup.remove(child);
+        if (child.geometry) child.geometry.dispose();
+    }
+
+    const height = params.height || 200;
+    const centerY = height * 0.48;
+
+    // 1. Replicate User's Actual Lamp Shade Geometry & Material
+    if (shadeMesh && shadeMesh.geometry) {
+        const shadeGeo = shadeMesh.geometry.clone();
+        
+        // Translucent PBR material reflecting user's filament settings
+        const filamentCol = renderState.filamentColor || 0xfff6e5;
+        const shadeMat = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(filamentCol),
+            roughness: renderState.filamentRoughness || 0.38,
+            metalness: 0.06,
+            side: THREE.DoubleSide
+        });
+
+        // Add soft warm internal emission when bulb is turned on
+        if (renderState.bulbOn) {
+            const glowCol = bulbLight ? bulbLight.color : new THREE.Color(0xffaa44);
+            shadeMat.emissive = glowCol;
+            shadeMat.emissiveIntensity = 0.16;
+        }
+
+        spotlightShadeMesh = new THREE.Mesh(shadeGeo, shadeMat);
+        spotlightShadeMesh.castShadow = true;
+        spotlightShadeMesh.receiveShadow = true;
+        spotlightLampGroup.add(spotlightShadeMesh);
+    }
+
+    // 2. Replicate User's Socket Fitter Struts & Ring
+    if (fitterMesh && fitterMesh.geometry) {
+        const fitterGeo = fitterMesh.geometry.clone();
+        const fitterMat = new THREE.MeshStandardMaterial({
+            color: 0x475569,
+            roughness: 0.4,
+            metalness: 0.65,
+            side: THREE.DoubleSide
+        });
+        spotlightFitterMesh = new THREE.Mesh(fitterGeo, fitterMat);
+        spotlightFitterMesh.castShadow = true;
+        spotlightLampGroup.add(spotlightFitterMesh);
+    }
+
+    // 3. Replicate Internal Bulb & Finished Hardware Socket Reference
+    const bulbGroup = new THREE.Group();
+    const bulbGeo = new THREE.SphereGeometry(20, 24, 24);
+    const activeBulbColor = bulbLight ? bulbLight.color : new THREE.Color(0xffd28a);
+    const bulbMat = new THREE.MeshBasicMaterial({
+        color: renderState.bulbOn ? activeBulbColor : 0x52525b
+    });
+    const bulbMesh = new THREE.Mesh(bulbGeo, bulbMat);
+    bulbGroup.add(bulbMesh);
+
+    // Hardware socket collar & brass thread ring
+    const holderGeo = new THREE.CylinderGeometry(14, 14, 26, 20);
+    const holderMat = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.45, metalness: 0.8 });
+    const holderMesh = new THREE.Mesh(holderGeo, holderMat);
+    holderMesh.position.y = -20;
+    bulbGroup.add(holderMesh);
+
+    const brassRingGeo = new THREE.CylinderGeometry(16, 16, 4.5, 20);
+    const brassRingMat = new THREE.MeshStandardMaterial({ color: 0xd4a359, roughness: 0.3, metalness: 0.9 });
+    const brassRingMesh = new THREE.Mesh(brassRingGeo, brassRingMat);
+    brassRingMesh.position.y = -8;
+    bulbGroup.add(brassRingMesh);
+
+    // Calculate bulb position matching actual studio mount
+    let bulbY = centerY;
+    if (params.mountPosition === 'top') {
+        bulbY = Math.max(30, height - (params.fitterOffset || 12) - 24);
+    } else if (params.mountPosition === 'solid_base') {
+        bulbY = 45;
+    } else {
+        bulbY = Math.max(35, (params.fitterOffset || 12) + 32);
+    }
+    bulbGroup.position.set(0, bulbY, 0);
+    spotlightLampGroup.add(bulbGroup);
+
+    // Sync Spotlight PointLight
+    if (spotlightPointLight) {
+        spotlightPointLight.position.set(0, bulbY, 0);
+        spotlightPointLight.color.copy(activeBulbColor);
+        spotlightPointLight.intensity = renderState.bulbOn ? 2.5 : 0.25;
+    }
+
+    // 4. Subtle Circular Blueprint Floor Accent (Provides spatial orientation)
+    const floorR = Math.max(params.bottomRadius || 75, params.topRadius || 55) + 18;
+    const ringGeo = new THREE.RingGeometry(floorR - 1.2, floorR, 64);
+    ringGeo.rotateX(-Math.PI / 2);
+    const ringMat = new THREE.MeshBasicMaterial({
+        color: 0xf59e0b,
+        transparent: true,
+        opacity: 0.28,
+        side: THREE.DoubleSide
+    });
+    const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+    ringMesh.position.y = 0.2;
+    spotlightLampGroup.add(ringMesh);
+
+    // 5. Intelligent Camera Framing: Ensure entire lamp is visible
+    const maxR = Math.max(params.bottomRadius || 75, params.topRadius || 55) + Math.abs(params.profileBulge || 0) + Math.abs(params.ribDepth || 0);
+    const span = Math.max(height, maxR * 2.2);
+    const camDist = span * 1.55;
+
+    spotlightInitialCamPos.set(camDist * 0.78, centerY + camDist * 0.32, camDist * 0.82);
+    spotlightInitialTarget.set(0, centerY, 0);
+
+    spotlightCamera.position.copy(spotlightInitialCamPos);
+    spotlightControls.target.copy(spotlightInitialTarget);
+    spotlightControls.update();
+
+    // 6. Capture fallback PNG for download and card gallery
+    if (spotlightRenderer && spotlightScene && spotlightCamera) {
+        spotlightRenderer.render(spotlightScene, spotlightCamera);
+        try {
+            currentSpotlightImage = spotlightRenderer.domElement.toDataURL('image/png', 0.95);
+        } catch (e) {
+            console.warn('Could not generate dataURL:', e);
+        }
+    }
+
+    // Update specs badge
+    const specsBadge = document.getElementById('spotlight-live-specs-badge');
+    if (specsBadge) {
+        specsBadge.textContent = getCurrentDesignSpecs();
+    }
+}
+
+/**
+ * Reset Camera View in Spotlight Viewport
+ */
+function resetSpotlightCamera() {
+    if (!spotlightCamera || !spotlightControls) return;
+    spotlightCamera.position.copy(spotlightInitialCamPos);
+    spotlightControls.target.copy(spotlightInitialTarget);
+    spotlightControls.update();
+
+    if (typeof showToast === 'function') {
+        showToast('🎥 View Reset', 'Spotlight camera returned to optimal framing.');
+    }
+}
+
+/**
+ * Open Creator Spotlight Modal
+ */
+function openCreatorSpotlight() {
+    const modal = document.getElementById('creator-spotlight-modal');
+    if (!modal) return;
+
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-100', 'pointer-events-auto');
+
+    // Switch to create form view by default if not previously submitted
+    const createView = document.getElementById('spotlight-create-view');
+    const resultView = document.getElementById('spotlight-result-view');
+    const galleryView = document.getElementById('spotlight-gallery-view');
+    
+    if (galleryView) galleryView.classList.add('hidden');
+    if (!resultView || resultView.classList.contains('hidden')) {
+        if (createView) createView.classList.remove('hidden');
+        if (resultView) resultView.classList.add('hidden');
+    }
+
+    // Initialize 3D scene and sync current lamp
+    initSpotlight3DScene();
+    syncLampToSpotlight3D();
+
+    // Start 3D rendering loop
+    isSpotlightOpen = true;
+    animateSpotlight();
+
+    // Resize canvas to container
+    requestAnimationFrame(() => {
+        onSpotlightResize();
+    });
+
+    updateSpotlightGalleryBadge();
+}
+
+/**
+ * Close Creator Spotlight Modal without disturbing main studio
+ */
+function closeCreatorSpotlight() {
+    const modal = document.getElementById('creator-spotlight-modal');
+    if (!modal) return;
+
+    modal.classList.remove('opacity-100', 'pointer-events-auto');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+
+    // Pause 3D animation loop to save CPU/GPU resources
+    isSpotlightOpen = false;
+    if (spotlightAnimId) {
+        cancelAnimationFrame(spotlightAnimId);
+        spotlightAnimId = null;
+    }
+}
+
+/**
+ * Capture My Lamp: Preserves user's exact current lamp geometry
+ */
+function captureLampFromStudio() {
+    try {
+        // Flash animation
+        const flash = document.getElementById('spotlight-camera-flash');
+        if (flash) {
+            flash.style.opacity = '0.9';
+            setTimeout(() => { flash.style.opacity = '0'; }, 220);
+        }
+
+        // Re-sync 3D model with latest design
+        syncLampToSpotlight3D();
+
+        // Update status badge
+        const captureStatus = document.getElementById('spotlight-capture-status');
+        const liveSpecs = document.getElementById('spotlight-live-specs-badge');
+        const captureBtnText = document.getElementById('text-capture-button');
+        const captureIcon = document.getElementById('icon-capture-camera');
+
+        if (captureStatus) {
+            captureStatus.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Design Captured (${params.height}mm)`;
+        }
+        if (liveSpecs) {
+            liveSpecs.textContent = getCurrentDesignSpecs();
+        }
+        if (captureBtnText) {
+            captureBtnText.textContent = 'Capture Again';
+        }
+        if (captureIcon) {
+            captureIcon.className = 'ph-bold ph-camera-rotate text-amber-400 text-sm group-hover:rotate-180 transition-transform duration-300';
+        }
+
+        // Clear validation error if any
+        const errEl = document.getElementById('spotlight-form-error');
+        if (errEl && errEl.textContent.includes('capture')) {
+            errEl.textContent = '';
+        }
+
+        if (typeof showToast === 'function') {
+            showToast('📸 3D Lamp Captured', 'Interactive 3D model updated with your latest studio design.');
+        }
+    } catch (err) {
+        console.error('Lamp snapshot failed:', err);
+        const errEl = document.getElementById('spotlight-form-error');
+        if (errEl) {
+            errEl.textContent = '⚠️ Capture failed: ' + (err.message || 'Could not sync 3D model.');
+        }
+    }
+}
+
+function setSpotlightRating(stars) {
+    currentSpotlightRating = stars;
+    const starContainer = document.getElementById('spotlight-star-container');
+    const ratingText = document.getElementById('spotlight-rating-text');
+    const clearBtn = document.getElementById('btn-clear-rating');
+
+    if (!starContainer) return;
+    const buttons = starContainer.querySelectorAll('.spotlight-star-btn');
+    buttons.forEach((btn, idx) => {
+        if (idx < stars) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    const labels = [
+        'Select rating',
+        '1 / 5 ★ Needs Work',
+        '2 / 5 ★★ Fair Design Tool',
+        '3 / 5 ★★★ Good Studio',
+        '4 / 5 ★★★★ Very Impressive!',
+        '5 / 5 ★★★★★ Masterpiece Studio!'
+    ];
+    if (ratingText) {
+        ratingText.textContent = labels[stars] || `${stars} / 5 Stars`;
+    }
+    if (clearBtn) {
+        if (stars > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+    }
+}
+
+function previewSpotlightRating(stars) {
+    const starContainer = document.getElementById('spotlight-star-container');
+    if (!starContainer) return;
+    const buttons = starContainer.querySelectorAll('.spotlight-star-btn');
+    buttons.forEach((btn, idx) => {
+        if (stars > 0 && idx < stars) {
+            btn.classList.add('hover-active');
+        } else {
+            btn.classList.remove('hover-active');
+        }
+    });
+}
+
+function clearSpotlightRating() {
+    setSpotlightRating(0);
+}
+
+function updateSpotlightCharCount() {
+    const reviewInput = document.getElementById('spotlight-review-text');
+    const charCount = document.getElementById('spotlight-char-count');
+    if (reviewInput && charCount) {
+        charCount.textContent = `${reviewInput.value.length} / 600`;
+    }
+}
+
+function buildCreatorCardHTML(data, showActions = true) {
+    const safeName = escapeSpotlightHTML(data.creatorName || 'Anonymous Creator');
+    const safeReview = escapeSpotlightHTML(data.review || 'No review provided.');
+    const safeSpecs = escapeSpotlightHTML(data.specs || getCurrentDesignSpecs());
+    const dateStr = data.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+    let starsHtml = '';
+    if (data.rating && data.rating > 0) {
+        starsHtml = `<div class="flex items-center gap-1 text-amber-400 text-xs" title="${data.rating} out of 5 stars">`;
+        for (let i = 1; i <= 5; i++) {
+            if (i <= data.rating) {
+                starsHtml += `<i class="ph-fill ph-star"></i>`;
+            } else {
+                starsHtml += `<i class="ph-bold ph-star text-slate-600"></i>`;
+            }
+        }
+        starsHtml += `<span class="ml-1 text-[11px] font-mono text-amber-300 font-bold">${data.rating}/5</span></div>`;
+    } else {
+        starsHtml = `<span class="text-[10px] font-mono text-slate-500 italic">No rating provided</span>`;
+    }
+
+    const initial = (data.creatorName && data.creatorName.trim().length > 0)
+        ? data.creatorName.trim().charAt(0).toUpperCase()
+        : 'C';
+
+    const thumbnail = data.image
+        ? `<div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-black/60 border border-white/10 shrink-0 shadow-inner flex items-center justify-center">
+             <img src="${data.image}" alt="${safeName}'s 3D Lamp" class="w-full h-full object-contain">
+           </div>`
+        : '';
+
+    // Action buttons: Remodel Lamp and Delete (Compact, professional, matching LuminaCAD style)
+    const actionButtonsHtml = showActions ? `
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2.5 mt-2.5 border-t border-white/10">
+            <button type="button" onclick="remodelLampFromSpotlight('${data.id}')"
+                class="px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/35 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm group"
+                title="Load this creator's design into the 3D lamp designer">
+                <i class="ph-bold ph-arrows-clockwise text-xs text-amber-400 group-hover:rotate-180 transition-transform duration-300"></i>
+                <span>Remodel Lamp</span>
+            </button>
+            <button type="button" onclick="confirmDeleteSpotlight('${data.id}')"
+                class="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-medium flex items-center gap-1.5 transition active:scale-95"
+                title="Delete this creator entry">
+                <i class="ph-bold ph-trash text-xs text-rose-400"></i>
+                <span>Delete</span>
+            </button>
+        </div>
+    ` : '';
+
+    return `
+        <div class="creator-spotlight-card rounded-2xl overflow-hidden border border-amber-500/30 bg-gradient-to-b from-[#14161f] to-[#0c0e12] shadow-2xl p-3.5 sm:p-4 relative" id="card-${data.id}">
+            <!-- Header Bar -->
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/10">
+                <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 rounded-md bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                        <i class="ph-fill ph-lightbulb text-xs"></i>
+                    </div>
+                    <span class="text-xs font-bold text-white tracking-wide">LuminaCAD <span class="text-amber-400 font-normal font-mono">Spotlight</span></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                        <i class="ph-bold ph-hard-drive"></i> Locally Saved
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-400">${dateStr}</span>
+                </div>
+            </div>
+
+            <!-- Content Body with Creator & Review -->
+            <div class="flex items-start gap-3">
+                ${thumbnail}
+                <div class="flex-1 min-w-0">
+                    <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-500 to-amber-300 text-black font-bold text-[10px] flex items-center justify-center shadow-md">
+                                ${initial}
+                            </div>
+                            <span class="text-xs font-bold text-white">${safeName}</span>
+                            <i class="ph-fill ph-seal-check text-amber-400 text-xs" title="LuminaCAD Creator"></i>
+                        </div>
+                        ${starsHtml}
+                    </div>
+
+                    <div class="text-[10px] font-mono text-amber-300/80 mb-2">${safeSpecs}</div>
+
+                    <!-- Review Text -->
+                    <div class="rounded-lg bg-black/40 border border-white/5 p-2.5 text-xs text-slate-200 leading-relaxed italic relative">
+                        "${safeReview}"
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Actions -->
+            ${actionButtonsHtml}
+        </div>
+    `;
+}
+
+function validateSpotlightForm() {
+    const nameInput = document.getElementById('spotlight-creator-name');
+    const reviewInput = document.getElementById('spotlight-review-text');
+    const errorEl = document.getElementById('spotlight-form-error');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const review = reviewInput ? reviewInput.value.trim() : '';
+
+    if (!name || name.length < 2) {
+        if (errorEl) errorEl.textContent = '⚠️ Please enter your Creator Name (at least 2 characters).';
+        if (nameInput) {
+            nameInput.focus();
+            nameInput.classList.add('border-rose-500');
+            setTimeout(() => nameInput.classList.remove('border-rose-500'), 2500);
+        }
+        return null;
+    }
+
+    if (!review || review.length < 5) {
+        if (errorEl) errorEl.textContent = '⚠️ Please write a brief review or feedback (at least 5 characters).';
+        if (reviewInput) {
+            reviewInput.focus();
+            reviewInput.classList.add('border-rose-500');
+            setTimeout(() => reviewInput.classList.remove('border-rose-500'), 2500);
+        }
+        return null;
+    }
+
+    if (errorEl) errorEl.textContent = '';
+    return {
+        creatorName: name,
+        rating: currentSpotlightRating,
+        review: review,
+        image: currentSpotlightImage,
+        specs: getCurrentDesignSpecs()
+    };
+}
+
+function submitCreatorSpotlight() {
+    const data = validateSpotlightForm();
+    if (!data) return;
+
+    const submission = {
+        id: 'spotlight_' + Date.now(),
+        creatorName: data.creatorName,
+        rating: data.rating,
+        review: data.review,
+        image: data.image,
+        specs: data.specs,
+        params: JSON.parse(JSON.stringify(params)),
+        renderState: {
+            bulbOn: renderState.bulbOn,
+            bulbPower: renderState.bulbPower,
+            bulbKelvin: renderState.bulbKelvin,
+            darkRoom: renderState.darkRoom,
+            renderMode: renderState.renderMode,
+            wireframe: renderState.wireframe,
+            filamentColor: renderState.filamentColor,
+            filamentRoughness: renderState.filamentRoughness,
+            filamentTransmission: renderState.filamentTransmission,
+            bedSize: renderState.bedSize
+        },
+        date: new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        }),
+        isLocalOnly: true
+    };
+
+    currentSubmissionId = submission.id;
+
+    // Save to local storage
+    saveSpotlightToStorage(submission);
+    updateSpotlightGalleryBadge();
+
+    // Render single card in result container (without duplicate card actions since action bar is right below)
+    const singleContainer = document.getElementById('spotlight-single-card-container');
+    if (singleContainer) {
+        singleContainer.innerHTML = buildCreatorCardHTML(submission, false);
+    }
+
+    // Switch view to result view (interactive 3D viewer remains visible above!)
+    const createView = document.getElementById('spotlight-create-view');
+    const resultView = document.getElementById('spotlight-result-view');
+    const galleryView = document.getElementById('spotlight-gallery-view');
+
+    if (createView) createView.classList.add('hidden');
+    if (resultView) resultView.classList.remove('hidden');
+    if (galleryView) galleryView.classList.add('hidden');
+
+    if (typeof showToast === 'function') {
+        showToast('🎉 Review Submitted!', `Thank you, ${submission.creatorName}! Your 3D lamp & review are saved.`);
+    }
+}
+
+/**
+ * Remodel a creator's lamp design: loads geometry, dimensions, materials, and filament parameters
+ * into the main LuminaCAD studio without replacing or mutating the saved gallery entry.
+ */
+function remodelLampFromSpotlight(id) {
+    const list = getStoredSpotlights();
+    const entry = list.find(item => item.id === id);
+
+    if (!entry) {
+        if (typeof showToast === 'function') {
+            showToast('⚠️ Entry Not Found', 'Could not locate the saved lamp record.');
+        }
+        return;
+    }
+
+    if (!entry.params || typeof entry.params !== 'object' || Object.keys(entry.params).length === 0) {
+        if (typeof showToast === 'function') {
+            showToast('⚠️ Design Unavailable', 'Parametric CAD data is not available for this entry. Design cannot be remodeled.');
+        }
+        return;
+    }
+
+    try {
+        // 1. Restore geometry & dimension parameters
+        params = { ...defaultParams, ...entry.params };
+
+        // 2. Restore filament, lighting, and material settings if saved
+        if (entry.renderState && typeof entry.renderState === 'object') {
+            const rs = entry.renderState;
+            if (rs.bulbPower !== undefined) renderState.bulbPower = rs.bulbPower;
+            if (rs.bulbKelvin !== undefined) renderState.bulbKelvin = rs.bulbKelvin;
+            if (rs.bulbOn !== undefined) {
+                renderState.bulbOn = rs.bulbOn;
+                const bulbBtn = document.getElementById('btn-bulb');
+                if (bulbBtn) {
+                    if (renderState.bulbOn) {
+                        bulbBtn.className = 'px-2.5 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-medium flex items-center gap-1.5 hover:bg-amber-500/30 transition shrink-0';
+                        bulbBtn.innerHTML = '<i class="ph-fill ph-lightbulb text-sm"></i><span>Bulb ON</span>';
+                    } else {
+                        bulbBtn.className = 'px-2.5 py-1.5 rounded-lg bg-white/5 text-slate-400 border border-white/10 text-xs font-medium flex items-center gap-1.5 hover:bg-white/10 transition shrink-0';
+                        bulbBtn.innerHTML = '<i class="ph-bold ph-lightbulb text-sm"></i><span>Bulb OFF</span>';
+                    }
+                }
+            }
+            if (rs.filamentColor !== undefined) {
+                renderState.filamentColor = rs.filamentColor;
+                if (litShadeMaterial) litShadeMaterial.color.setHex(rs.filamentColor);
+            }
+            if (rs.filamentRoughness !== undefined) {
+                renderState.filamentRoughness = rs.filamentRoughness;
+                if (litShadeMaterial) litShadeMaterial.roughness = rs.filamentRoughness;
+            }
+            if (rs.filamentTransmission !== undefined) {
+                renderState.filamentTransmission = rs.filamentTransmission;
+                if (litShadeMaterial && litShadeMaterial.userData.shader && litShadeMaterial.userData.shader.uniforms.uTransmission) {
+                    litShadeMaterial.userData.shader.uniforms.uTransmission.value = rs.filamentTransmission;
+                }
+            }
+            if (rs.renderMode !== undefined && typeof setRenderMode === 'function') {
+                setRenderMode(rs.renderMode || 'lit');
+            }
+            if (rs.bedSize !== undefined && typeof updatePrintBed === 'function') {
+                updatePrintBed(rs.bedSize);
+            }
+
+            // Sync bulb slider inputs
+            const pEl = document.getElementById('ctrl-bulbPower');
+            if (pEl) pEl.value = renderState.bulbPower;
+            const kEl = document.getElementById('ctrl-bulbKelvin');
+            if (kEl) kEl.value = renderState.bulbKelvin;
+            updateLightingFromUI();
+        }
+
+        // 3. Highlight corresponding preset pill if pattern matches
+        document.querySelectorAll('.preset-pill').forEach(btn => btn.classList.remove('active'));
+        if (typeof PRESETS === 'object') {
+            Object.keys(PRESETS).forEach(pKey => {
+                if (PRESETS[pKey].patternType === params.patternType && PRESETS[pKey].profileType === params.profileType) {
+                    const pBtn = document.getElementById(`preset-${pKey}`);
+                    if (pBtn) pBtn.classList.add('active');
+                }
+            });
+        }
+
+        // 4. Synchronize UI inputs and labels
+        syncUILabels();
+
+        // 5. Rebuild lamp 3D geometry
+        rebuildLampGeometry();
+
+        // 6. Close spotlight modal without modifying original saved entry
+        closeCreatorSpotlight();
+
+        // 7. Show success feedback
+        if (typeof showToast === 'function') {
+            const creatorName = entry.creatorName || 'Creator';
+            showToast('✨ Design Remodeled', `Loaded ${creatorName}'s lamp design into the 3D designer. You can continue editing.`);
+        }
+    } catch (err) {
+        console.error('Error remodeling design:', err);
+        if (typeof showToast === 'function') {
+            showToast('⚠️ Remodel Error', 'Could not fully restore design parameters.');
+        }
+    }
+}
+
+/**
+ * Open confirmation dialog to delete a specific creator gallery entry
+ */
+function confirmDeleteSpotlight(id) {
+    pendingDeleteTarget = { type: 'entry', id: id };
+    const modal = document.getElementById('spotlight-delete-modal');
+    const msgEl = document.getElementById('spotlight-delete-message');
+    if (msgEl) {
+        msgEl.textContent = 'Are you sure you want to delete this creator entry?';
+    }
+    if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+    }
+}
+
+/**
+ * Open confirmation dialog to delete the review currently in the feedback box
+ */
+function confirmDeleteCurrentFeedback() {
+    if (!currentSubmissionId) {
+        const list = getStoredSpotlights();
+        if (list.length > 0) {
+            currentSubmissionId = list[0].id;
+        }
+    }
+    if (!currentSubmissionId) {
+        if (typeof showToast === 'function') {
+            showToast('⚠️ No Review Selected', 'No active review found to delete.');
+        }
+        return;
+    }
+    pendingDeleteTarget = { type: 'feedback', id: currentSubmissionId };
+    const modal = document.getElementById('spotlight-delete-modal');
+    const msgEl = document.getElementById('spotlight-delete-message');
+    if (msgEl) {
+        msgEl.textContent = 'Are you sure you want to delete this review?';
+    }
+    if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+    }
+}
+
+/**
+ * Cancel pending deletion
+ */
+function cancelDeleteSpotlight() {
+    pendingDeleteTarget = null;
+    const modal = document.getElementById('spotlight-delete-modal');
+    if (modal) {
+        modal.classList.remove('opacity-100', 'pointer-events-auto');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+}
+
+/**
+ * Execute deletion of selected creator entry or review upon user confirmation
+ */
+function executeDeleteSpotlight() {
+    if (!pendingDeleteTarget || !pendingDeleteTarget.id) {
+        cancelDeleteSpotlight();
+        return;
+    }
+
+    const targetId = pendingDeleteTarget.id;
+    const targetType = pendingDeleteTarget.type;
+
+    try {
+        let list = getStoredSpotlights();
+        list = list.filter(item => item.id !== targetId);
+        localStorage.setItem(SPOTLIGHT_STORAGE_KEY, JSON.stringify(list));
+        updateSpotlightGalleryBadge();
+
+        if (targetType === 'feedback') {
+            // Reset feedback form fields
+            const nameInput = document.getElementById('spotlight-creator-name');
+            const reviewInput = document.getElementById('spotlight-review-text');
+            if (nameInput) nameInput.value = '';
+            if (reviewInput) reviewInput.value = '';
+            clearSpotlightRating();
+            updateSpotlightCharCount();
+
+            // Switch result view back to create view
+            const createView = document.getElementById('spotlight-create-view');
+            const resultView = document.getElementById('spotlight-result-view');
+            if (createView) createView.classList.remove('hidden');
+            if (resultView) resultView.classList.add('hidden');
+
+            currentSubmissionId = null;
+
+            if (typeof showToast === 'function') {
+                showToast('🗑️ Review Deleted', 'Your spotlight review has been deleted.');
+            }
+        } else {
+            // Re-render gallery
+            renderSpotlightGallery();
+
+            if (currentSubmissionId === targetId) {
+                currentSubmissionId = null;
+                const resultView = document.getElementById('spotlight-result-view');
+                if (resultView && !resultView.classList.contains('hidden')) {
+                    const createView = document.getElementById('spotlight-create-view');
+                    if (createView) createView.classList.remove('hidden');
+                    resultView.classList.add('hidden');
+                }
+            }
+
+            if (typeof showToast === 'function') {
+                showToast('🗑️ Entry Deleted', 'Creator entry was removed from the gallery.');
+            }
+        }
+    } catch (e) {
+        console.error('Delete error:', e);
+        if (typeof showToast === 'function') {
+            showToast('⚠️ Delete Failed', 'Could not delete entry from storage.');
+        }
+    } finally {
+        cancelDeleteSpotlight();
+    }
+}
+
+function editCurrentSpotlightReview() {
+    const createView = document.getElementById('spotlight-create-view');
+    const resultView = document.getElementById('spotlight-result-view');
+    const galleryView = document.getElementById('spotlight-gallery-view');
+
+    if (createView) createView.classList.remove('hidden');
+    if (resultView) resultView.classList.add('hidden');
+    if (galleryView) galleryView.classList.add('hidden');
+}
+
+function downloadCurrentSpotlightCard() {
+    if (!currentSpotlightImage) {
+        if (typeof showToast === 'function') {
+            showToast('⚠️ No Image Available', 'Please capture your 3D lamp design first.');
+        }
+        return;
+    }
+
+    const nameInput = document.getElementById('spotlight-creator-name');
+    const safeName = (nameInput && nameInput.value.trim() ? nameInput.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '_') : 'creator');
+    const a = document.createElement('a');
+    a.href = currentSpotlightImage;
+    a.download = `luminacad_spotlight_${safeName}_${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    if (typeof showToast === 'function') {
+        showToast('✨ Image Downloaded', 'Your 3D lamp capture has been exported as PNG.');
+    }
+}
+
+function showCreateNewSpotlight() {
+    const createView = document.getElementById('spotlight-create-view');
+    const resultView = document.getElementById('spotlight-result-view');
+    const galleryView = document.getElementById('spotlight-gallery-view');
+
+    if (createView) createView.classList.remove('hidden');
+    if (resultView) resultView.classList.add('hidden');
+    if (galleryView) galleryView.classList.add('hidden');
+
+    // Fresh snapshot of the current 3D viewport
+    captureLampFromStudio();
+}
+
+function toggleSpotlightGalleryView() {
+    const createView = document.getElementById('spotlight-create-view');
+    const resultView = document.getElementById('spotlight-result-view');
+    const galleryView = document.getElementById('spotlight-gallery-view');
+
+    if (!galleryView) return;
+    const isShowingGallery = !galleryView.classList.contains('hidden');
+
+    if (isShowingGallery) {
+        galleryView.classList.add('hidden');
+        if (createView) createView.classList.remove('hidden');
+        if (resultView) resultView.classList.add('hidden');
+    } else {
+        renderSpotlightGallery();
+        galleryView.classList.remove('hidden');
+        if (createView) createView.classList.add('hidden');
+        if (resultView) resultView.classList.add('hidden');
+    }
+}
+
+function renderSpotlightGallery() {
+    const listEl = document.getElementById('spotlight-gallery-list');
+    if (!listEl) return;
+
+    const spotlights = getStoredSpotlights();
+    if (spotlights.length === 0) {
+        listEl.innerHTML = `
+            <div class="text-center py-8 px-4 rounded-xl border border-dashed border-white/10 bg-white/[0.01]">
+                <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-2">
+                    <i class="ph-bold ph-cards text-2xl"></i>
+                </div>
+                <div class="text-xs font-bold text-white">No Saved Spotlights Yet</div>
+                <div class="text-[11px] text-slate-400 max-w-sm mx-auto mt-1">Capture your 3D lamp, write your review, and submit to save your first spotlight card!</div>
+                <button type="button" onclick="showCreateNewSpotlight()" class="mt-3 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition">
+                    Create Spotlight Now
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    listEl.innerHTML = spotlights.map(item => buildCreatorCardHTML(item, true)).join('');
+}
+
+// Global exposure
+window.openCreatorSpotlight = openCreatorSpotlight;
+window.closeCreatorSpotlight = closeCreatorSpotlight;
+window.captureLampFromStudio = captureLampFromStudio;
+window.resetSpotlightCamera = resetSpotlightCamera;
+window.setSpotlightRating = setSpotlightRating;
+window.previewSpotlightRating = previewSpotlightRating;
+window.clearSpotlightRating = clearSpotlightRating;
+window.updateSpotlightCharCount = updateSpotlightCharCount;
+window.submitCreatorSpotlight = submitCreatorSpotlight;
+window.editCurrentSpotlightReview = editCurrentSpotlightReview;
+window.downloadCurrentSpotlightCard = downloadCurrentSpotlightCard;
+window.showCreateNewSpotlight = showCreateNewSpotlight;
+window.toggleSpotlightGalleryView = toggleSpotlightGalleryView;
+window.renderSpotlightGallery = renderSpotlightGallery;
+window.remodelLampFromSpotlight = remodelLampFromSpotlight;
+window.confirmDeleteSpotlight = confirmDeleteSpotlight;
+window.confirmDeleteCurrentFeedback = confirmDeleteCurrentFeedback;
+window.cancelDeleteSpotlight = cancelDeleteSpotlight;
+window.executeDeleteSpotlight = executeDeleteSpotlight;
+
+// Close on Escape key (handles delete modal first, then spotlight modal)
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const delModal = document.getElementById('spotlight-delete-modal');
+        if (delModal && !delModal.classList.contains('pointer-events-none')) {
+            cancelDeleteSpotlight();
+            return;
+        }
+        const modal = document.getElementById('creator-spotlight-modal');
+        if (modal && !modal.classList.contains('pointer-events-none')) {
+            closeCreatorSpotlight();
+        }
+    }
+});
+
 window.addEventListener('DOMContentLoaded', () => {
     initThreeScene();
     bindUIControls();
     syncUILabels();
     animate();
     initLuminaIntro();
+    updateSpotlightGalleryBadge();
+
+    const btnSpotlight = document.getElementById('btn-creator-spotlight');
+    if (btnSpotlight) {
+        btnSpotlight.addEventListener('click', openCreatorSpotlight);
+    }
 });
