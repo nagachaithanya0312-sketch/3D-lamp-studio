@@ -202,8 +202,19 @@ function initThreeScene() {
     rebuildLampGeometry();
     updateLightingFromUI();
 
-    // Resize Listener
+    // Responsive Resize & Orientation Listeners
     window.addEventListener('resize', onWindowResize);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(onWindowResize, 100);
+        setTimeout(onWindowResize, 300);
+    });
+
+    if (window.ResizeObserver) {
+        const vpObserver = new ResizeObserver(() => {
+            onWindowResize();
+        });
+        vpObserver.observe(container);
+    }
 }
 
 function initMaterials() {
@@ -1715,9 +1726,13 @@ function applyAISlicerOptimization() {
 function onWindowResize() {
     const container = document.getElementById('viewport-container');
     if (!container || !renderer || !camera) return;
-    camera.aspect = container.clientWidth / container.clientHeight;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    if (width === 0 || height === 0) return;
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 }
 
 /***********************************************************************
